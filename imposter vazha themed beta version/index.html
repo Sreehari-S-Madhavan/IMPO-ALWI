@@ -1,0 +1,2372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>IMPOSTER - TRUST NO ONE</title>
+    <style>
+        /* ============================================================
+           DOOMSDAY / AVENGERS DOOMSDAY-INSPIRED CINEMATIC THEME
+           ============================================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-red: #8B0000;
+            --emergency-red: #FF0000;
+            --dark-bg: #0a0a0a;
+            --panel-bg: rgba(20, 20, 20, 0.85);
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent-gold: #FFD700;
+            --accent-blue: #4169E1;
+            --glow-red: rgba(255, 0, 0, 0.3);
+            --glow-gold: rgba(255, 215, 0, 0.2);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Cinematic Background Layers */
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4) contrast(1.2);
+        }
+
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(139, 0, 0, 0.4) 0%,
+                rgba(10, 10, 10, 0.8) 50%,
+                rgba(0, 0, 0, 0.9) 100%
+            );
+        }
+
+        .bg-vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.7) 100%
+            );
+        }
+
+        /* CSS Fallback Background */
+        .css-background {
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(139, 0, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(65, 105, 225, 0.2) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+        }
+
+        /* Emergency Scan Lines */
+        .scan-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            opacity: 0.3;
+        }
+
+        /* Main Container */
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Screen States */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px var(--glow-red); }
+            50% { box-shadow: 0 0 40px var(--glow-red); }
+        }
+
+        /* Glass Panels */
+        .panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        .panel-emergency {
+            border: 2px solid var(--emergency-red);
+            animation: glow 2s infinite;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px var(--glow-red);
+            color: var(--text-primary);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            color: var(--accent-gold);
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            text-align: center;
+            letter-spacing: 6px;
+            color: var(--emergency-red);
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 18px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-red) 0%, #4a0000 100%);
+            color: white;
+            border: 2px solid var(--emergency-red);
+            box-shadow: 0 4px 20px var(--glow-red);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px var(--glow-red);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #228B22 0%, #006400 100%);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            width: auto;
+        }
+
+        /* Input Fields */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 15px var(--glow-gold);
+        }
+
+        /* Player List */
+        .player-list {
+            margin-bottom: 20px;
+        }
+
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .player-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .btn-remove {
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            background: rgba(255, 0, 0, 0.3);
+            border: 1px solid var(--emergency-red);
+            color: var(--emergency-red);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-remove:hover {
+            background: var(--emergency-red);
+            color: white;
+        }
+
+        /* Game Mode Selection */
+        .mode-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .mode-card {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .mode-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+        }
+
+        .mode-card.selected {
+            border-color: var(--accent-gold);
+            background: rgba(255, 215, 0, 0.1);
+            box-shadow: 0 0 20px var(--glow-gold);
+        }
+
+        .mode-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: var(--accent-gold);
+        }
+
+        .mode-description {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Imposter Count */
+        .imposter-count {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .count-option {
+            flex: 1;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .count-option:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .count-option.selected {
+            border-color: var(--accent-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        /* Round Info */
+        .round-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .round-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            letter-spacing: 4px;
+        }
+
+        .round-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-secondary);
+        }
+
+        /* Card Reveal */
+        .card-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .player-reveal {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--accent-gold);
+        }
+
+        .player-name-large {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            letter-spacing: 4px;
+        }
+
+        .secret-word {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: 6px;
+            margin: 30px 0;
+            text-shadow: 0 0 30px var(--glow-gold);
+        }
+
+        .imposter-text {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--emergency-red);
+            letter-spacing: 4px;
+            margin: 30px 0;
+            animation: pulse 1.5s infinite;
+        }
+
+        .card-instruction {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Voting */
+        .voting-options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .vote-option {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .vote-option:hover {
+            border-color: var(--accent-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .vote-option.selected {
+            border-color: var(--accent-gold);
+            background: rgba(255, 215, 0, 0.2);
+            box-shadow: 0 0 15px var(--glow-gold);
+        }
+
+        /* Results */
+        .result-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .result-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            letter-spacing: 4px;
+        }
+
+        .result-title.caught {
+            color: #228B22;
+        }
+
+        .result-title.escaped {
+            color: var(--emergency-red);
+        }
+
+        .result-imposter {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            margin: 30px 0;
+            letter-spacing: 6px;
+        }
+
+        .result-word {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .result-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 20px auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .result-points {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .result-points.positive {
+            color: #228B22;
+        }
+
+        .result-points.negative {
+            color: var(--emergency-red);
+        }
+
+        /* Scoreboard */
+        .scoreboard {
+            margin-bottom: 20px;
+        }
+
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .score-item.leader {
+            border-color: var(--accent-gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .score-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .score-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        /* Audio Control */
+        .audio-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .audio-control:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* How to Play */
+        .how-to-play {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .how-to-play h4 {
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            margin: 20px 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+                letter-spacing: 4px;
+            }
+
+            .tagline {
+                font-size: 1rem;
+                letter-spacing: 3px;
+            }
+
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .secret-word {
+                font-size: 2rem;
+                letter-spacing: 3px;
+            }
+
+            .player-name-large {
+                font-size: 1.8rem;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 15px 20px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Cinematic Transitions */
+        .cinematic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        .cinematic-text {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid var(--emergency-red);
+            color: var(--emergency-red);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Layers -->
+    <div class="background-layer css-background" id="backgroundLayer">
+        <div class="bg-overlay"></div>
+        <div class="bg-vignette"></div>
+    </div>
+
+    <!-- Scan Lines Effect -->
+    <div class="scan-lines"></div>
+
+    <!-- Audio Control -->
+    <div class="audio-control" id="audioControl" title="Toggle Audio">
+        🔊
+    </div>
+
+    <!-- Main Game Container -->
+    <div class="game-container">
+        
+        <!-- HOME SCREEN -->
+        <div class="screen active" id="homeScreen">
+            <div class="panel text-center">
+                <h1>IMPOSTER</h1>
+                <p class="tagline">TRUST NO ONE.</p>
+                <button class="btn btn-primary" onclick="Game.goToSetup()">START GAME</button>
+                <button class="btn btn-secondary" onclick="Game.showHowToPlay()">HOW TO PLAY</button>
+            </div>
+        </div>
+
+        <!-- HOW TO PLAY SCREEN -->
+        <div class="screen" id="howToPlayScreen">
+            <div class="panel">
+                <h2>MISSION BRIEFING</h2>
+                <div class="how-to-play">
+                    <h4>CLASSIC IMPOSTER</h4>
+                    <p>One or two players do not know the secret word. They must blend in while normal players discuss and give clues. Find the imposter before it's too late.</p>
+                    
+                    <h4>BLIND IMPOSTER</h4>
+                    <p>One or two players receive a different word from the same category. They don't know they're the imposter. They genuinely believe their word is correct.</p>
+                    
+                    <h4>OBJECTIVE</h4>
+                    <p>Discuss. Give clues. Question suspicious answers. Identify the imposter. Vote to neutralize the threat. Earn points for successful missions.</p>
+                    
+                    <h4>SCORING</h4>
+                    <p>• Imposter Caught: Normal players +1 point, Imposter 0 points</p>
+                    <p>• Imposter Escapes: Imposter +2 points, Normal players 0 points</p>
+                </div>
+                <button class="btn btn-primary mt-20" onclick="Game.goToHome()">RETURN TO BASE</button>
+            </div>
+        </div>
+
+        <!-- SETUP SCREEN -->
+        <div class="screen" id="setupScreen">
+            <div class="panel">
+                <h2>MISSION SETUP</h2>
+                
+                <h3>OPERATIVES</h3>
+                <div class="input-group">
+                    <input type="text" id="playerNameInput" placeholder="Enter operative name" maxlength="20">
+                </div>
+                <button class="btn btn-secondary btn-small" onclick="PlayerManager.addPlayer()">+ ADD OPERATIVE</button>
+                
+                <div class="player-list" id="playerList"></div>
+                <p class="text-center" id="playerCount">0 OPERATIVES</p>
+                
+                <h3 class="mt-20">MISSION TYPE</h3>
+                <div class="mode-selection">
+                    <div class="mode-card" id="classicMode" onclick="GameMode.selectClassic()">
+                        <div class="mode-title">CLASSIC</div>
+                        <div class="mode-description">Imposter doesn't know the word</div>
+                    </div>
+                    <div class="mode-card" id="blindMode" onclick="GameMode.selectBlind()">
+                        <div class="mode-title">BLIND</div>
+                        <div class="mode-description">Imposter gets different word</div>
+                    </div>
+                </div>
+                
+                <h3>THREAT LEVEL</h3>
+                <div class="imposter-count">
+                    <div class="count-option" id="oneImposter" onclick="GameMode.selectOneImposter()">
+                        <div>1 IMPOSTER</div>
+                    </div>
+                    <div class="count-option" id="twoImposters" onclick="GameMode.selectTwoImposters()">
+                        <div>2 IMPOSTERS</div>
+                    </div>
+                </div>
+                
+                <h3>CATEGORY</h3>
+                <div class="input-group">
+                    <select id="categorySelect"></select>
+                </div>
+                
+                <div id="setupError" class="error-message hidden"></div>
+                
+                <button class="btn btn-primary mt-20" onclick="Game.startGame()">INITIATE MISSION</button>
+                <button class="btn btn-secondary" onclick="Game.goToHome()">ABORT</button>
+            </div>
+        </div>
+
+        <!-- ROUND INTRO SCREEN -->
+        <div class="screen" id="roundIntroScreen">
+            <div class="panel text-center panel-emergency">
+                <div class="round-info">
+                    <div class="round-label">ROUND</div>
+                    <div class="round-number" id="roundNumber">01</div>
+                </div>
+                <h2 id="roundTitle">CLASSIFIED MISSION</h2>
+                <p class="card-instruction">Each operative will receive classified information. Pass the device privately. Trust no one.</p>
+                <button class="btn btn-primary" onclick="Game.startPlayerReveal()">BEGIN BRIEFING</button>
+            </div>
+        </div>
+
+        <!-- PLAYER REVEAL SCREEN -->
+        <div class="screen" id="playerRevealScreen">
+            <div class="panel text-center">
+                <div class="card-container">
+                    <p class="player-reveal">OPERATIVE</p>
+                    <p class="player-name-large" id="revealPlayerName">PLAYER NAME</p>
+                    <p class="card-instruction">Take the device. Ensure no one else can see the screen.</p>
+                    <button class="btn btn-primary" id="revealCardBtn" onclick="Game.revealCard()">REVEAL CLASSIFIED INFO</button>
+                </div>
+                <div id="cardContent" class="hidden">
+                    <div id="normalWordDisplay" class="hidden">
+                        <p class="card-instruction">YOUR SECRET WORD</p>
+                        <p class="secret-word" id="secretWordDisplay">WORD</p>
+                    </div>
+                    <div id="classicImposterDisplay" class="hidden">
+                        <p class="imposter-text">YOU ARE THE IMPOSTER</p>
+                        <p class="card-instruction">You do not know the secret word. BLEND IN.</p>
+                    </div>
+                    <div id="blindImposterDisplay" class="hidden">
+                        <p class="card-instruction">YOUR SECRET WORD</p>
+                        <p class="secret-word" id="blindWordDisplay">WORD</p>
+                    </div>
+                    <button class="btn btn-danger mt-20" onclick="Game.hideAndPass()">HIDE & PASS</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASS SCREEN -->
+        <div class="screen" id="passScreen">
+            <div class="panel text-center panel-emergency">
+                <h2>PASS THE DEVICE</h2>
+                <p class="card-instruction">Next operative:</p>
+                <p class="player-name-large" id="nextPlayerName">PLAYER NAME</p>
+                <p class="card-instruction">Ensure they cannot see your classified information.</p>
+                <button class="btn btn-primary" onclick="Game.readyForNextPlayer()">READY</button>
+            </div>
+        </div>
+
+        <!-- DISCUSSION SCREEN -->
+        <div class="screen" id="discussionScreen">
+            <div class="panel text-center">
+                <h2>DISCUSSION PHASE</h2>
+                <p class="card-instruction">Everyone has their classified information.</p>
+                <p class="card-instruction">Give clues. Question suspicious answers. Find the imposter.</p>
+                <p class="tagline">TRUST NO ONE.</p>
+                <button class="btn btn-primary" onclick="Game.startVoting()">START VOTING</button>
+            </div>
+        </div>
+
+        <!-- VOTING SCREEN -->
+        <div class="screen" id="votingScreen">
+            <div class="panel">
+                <h2>VOTING PROTOCOL</h2>
+                <p class="card-instruction">Operative:</p>
+                <p class="player-name-large" id="votingPlayerName">PLAYER NAME</p>
+                <p class="card-instruction">Who is the imposter?</p>
+                <div class="voting-options" id="votingOptions"></div>
+                <button class="btn btn-primary" id="confirmVoteBtn" onclick="Game.confirmVote()" disabled>CONFIRM VOTE</button>
+            </div>
+        </div>
+
+        <!-- VOTE PASS SCREEN -->
+        <div class="screen" id="votePassScreen">
+            <div class="panel text-center panel-emergency">
+                <h2>PASS THE DEVICE</h2>
+                <p class="card-instruction">Next voter:</p>
+                <p class="player-name-large" id="nextVoterName">PLAYER NAME</p>
+                <p class="card-instruction">Ensure they cannot see previous votes.</p>
+                <button class="btn btn-primary" onclick="Game.readyForNextVoter()">READY</button>
+            </div>
+        </div>
+
+        <!-- CINEMATIC RESULT SCREEN -->
+        <div class="screen" id="cinematicResultScreen">
+            <div class="result-container">
+                <div id="cinematicResultImage"></div>
+                <h2 class="result-title" id="cinematicResultTitle">RESULT</h2>
+                <p class="result-imposter" id="cinematicImposterName">IMPOSTER</p>
+                <p class="result-word" id="cinematicResultWord">Secret Word</p>
+                <p class="result-points" id="cinematicResultPoints">Points</p>
+            </div>
+        </div>
+
+        <!-- ROUND RESULT SCREEN -->
+        <div class="screen" id="roundResultScreen">
+            <div class="panel text-center">
+                <h2 class="result-title" id="roundResultTitle">RESULT</h2>
+                <div id="roundResultImage"></div>
+                <p class="result-imposter" id="roundImposterName">IMPOSTER</p>
+                <p class="result-word" id="roundSecretWord">Secret Word</p>
+                <p class="result-word" id="roundBlindWord" class="hidden">Blind Word</p>
+                <div class="scoreboard mt-20" id="roundScoreboard"></div>
+                <button class="btn btn-primary mt-20" onclick="Game.playAnotherRound()">PLAY ANOTHER ROUND</button>
+                <button class="btn btn-secondary" onclick="Game.newGame()">NEW GAME</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+         JAVASCRIPT GAME ENGINE
+         ============================================================ -->
+    <script>
+        // ============================================================
+        // USER CONFIGURATION
+        // CHANGE ONLY THIS SECTION
+        // ============================================================
+
+        const GAME_DATA = {
+  "categories": [
+    {
+      "name": "Animals & Wildlife",
+      "terms": [
+        "Lion", "Tiger", "Elephant", "Kangaroo", "Penguin", "Giraffe", "Zebra", "Panda", "Dolphin", "Eagle",
+        "Wolf", "Bear", "Rabbit", "Frog", "Shark", "Cheetah", "Leopard", "Hippopotamus", "Rhinoceros", "Gorilla",
+        "Chimpanzee", "Koala", "Sloth", "Crocodile", "Alligator", "Snake", "Lizard", "Turtle", "Tortoise", "Chameleon",
+        "Owl", "Hawk", "Falcon", "Parrot", "Peacock", "Flamingo", "Swan", "Duck", "Goose", "Pelican",
+        "Whale", "Blue Whale", "Killer Whale", "Seal", "Sea Lion", "Walrus", "Otter", "Beaver", "Platypus", "Armadillo",
+        "Hedgehog", "Porcupine", "Squirrel", "Chipmunk", "Raccoon", "Skunk", "Badger", "Mongoose", "Meerkat", "Hyena",
+        "Jackal", "Fox", "Reindeer", "Moose", "Elk", "Deer", "Antelope", "Bison", "Buffalo", "Camel",
+        "Llama", "Alpaca", "Donkey", "Horse", "Zebra", "Jaguar", "Panther", "Lynx", "Bobcat", "Wolverine",
+        "Tasmanian Devil", "Wombat", "Echidna", "Opossum", "Lemur", "Baboon", "Macaque", "Orangutan", "Gibbon", "Aardvark",
+        "Ant", "Bee", "Wasp", "Hornet", "Butterfly", "Moth", "Dragonfly", "Damselfly", "Beetle", "Ladybug",
+        "Firefly", "Grasshopper", "Cricket", "Mantis", "Spider", "Scorpion", "Centipede", "Millipede", "Snail", "Slug",
+        "Octopus", "Squid", "Jellyfish", "Starfish", "Sea Urchin", "Crab", "Lobster", "Shrimp", "Barnacle", "Coral",
+        "Stingray", "Manta Ray", "Eel", "Swordfish", "Tuna", "Salmon", "Trout", "Goldfish", "Clownfish", "Piranha",
+        "Pufferfish", "Seahorse", "Anemone", "Plankton", "Krill", "Caterpillar", "Earthworm", "Leech", "Tick", "Flea",
+        "Mosquito", "Housefly", "Termite", "Cicada", "Cockroach", "Mayfly", "Caddis fly", "Aphid", "Weevil", "Tarantula",
+        "Black Widow", "Scorpion", "Hermit Crab", "Crayfish", "Oyster", "Clam", "Mussel", "Scallop", "Nautilus", "Cuttlefish",
+        "Hammerhead Shark", "Tiger Shark", "Great White Shark", "Nurse Shark", "Leopard Shark", "Electric Eel", "Moray Eel", "Barracuda", "Marlin", "Sailfish",
+        "Halibut", "Cod", "Sardine", "Anchovy", "Herring", "Snapper", "Grouper", "Flounder", "Catfish", "Carp",
+        "Sturgeon", "Manatee", "Dugong", "Narwhal", "Beluga Whale", "Sperm Whale", "Humpback Whale", "Orca", "Vulture", "Condor",
+        "Albatross", "Seagull", "Puffin", "Penguin", "Ostrich", "Emu", "Cassowary", "Kiwi", "Stork", "Heron",
+        "Crane", "Ibis", "Flamingo", "Pelican", "Cormorant", "Albatross", "Woodpecker", "Toucan", "Hummingbird", "Kingfisher",
+        "Bluejay", "Cardinal", "Robin", "Sparrow", "Finch", "Canary", "Parakeet", "Macaw", "Cockatiel", "Cockatoo",
+        "Pigeon", "Dove", "Quail", "Pheasant", "Turkey", "Chicken", "Rooster", "Duck", "Goose", "Swan",
+        "Magpie", "Crow", "Raven", "Bluebird", "Swallow", "Martin", "Swift", "Nightingale", "Mockingbird", "Canary",
+        "Chinchilla", "Guinea Pig", "Hamster", "Gerbil", "Mouse", "Rat", "Vole", "Shrew", "Mole", "Bat",
+        "Vampire Bat", "Fruit Bat", "Flying Fox", "Pangolin", "Quokka", "Wallaby", "Bandicoot", "Numbat", "Tasmanian Tiger", "Dingo",
+        "Coyote", "Jackal", "Red Fox", "Arctic Fox", "Fennec Fox", "Polar Bear", "Grizzly Bear", "Black Bear", "Panda Bear", "Sun Bear",
+        "Sloth Bear", "Spectacled Bear", "Red Panda", "Raccoon Dog", "Civet", "Genet", "Binturong", "Fossa", "Meerkat", "Mongoose",
+        "Weasel", "Stoat", "Ferret", "Mink", "Sable", "Pine Marten", "Wolverine", "Badger", "Honey Badger", "Skunk",
+        "Sea Otter", "River Otter", "Giant Otter", "Walrus", "Harbor Seal", "Elephant Seal", "Leopard Seal", "Fur Seal", "Sea Lion", "Manatee"
+      ]
+    },
+    {
+      "name": "Food & Drink",
+      "terms": [
+        "Pizza", "Burger", "Sushi", "Taco", "Ramen", "Pasta", "Ice Cream", "Coffee", "Chocolate", "Pancake",
+        "Cheese", "Soup", "Apple", "Banana", "Sandwich", "Steak", "Salad", "Burrito", "Hot Dog", "Donut",
+        "Waffle", "Croissant", "Bagel", "Omelet", "Bacon", "Sausage", "Pork Chop", "Fried Chicken", "Barbecue", "Ribs",
+        "Lasagna", "Spaghetti", "Macaroni", "Ravioli", "Gnocchi", "Risotto", "Paella", "Curry", "Dumpling", "Spring Roll",
+        "Tempura", "Sashimi", "Miso Soup", "Pho", "Pad Thai", "Falafel", "Hummus", "Kebab", "Gyro", "Shawarma",
+        "Nachos", "Quesadilla", "Enchilada", "Fajita", "Guacamole", "Salsa", "Churros", "Flan", "Tiramisu", "Cheesecake",
+        "Brownie", "Cookie", "Cupcake", "Muffin", "Pie", "Apple Pie", "Pecan Pie", "Pumpkin Pie", "Tart", "Eclair",
+        "Macaron", "Pudding", "Custard", "Sorbet", "Gelato", "Milkshake", "Smoothie", "Lemonade", "Iced Tea", "Green Tea",
+        "Black Tea", "Chai", "Espresso", "Cappuccino", "Latte", "Mocha", "Macchiato", "Americano", "Hot Chocolate", "Cider",
+        "Orange Juice", "Apple Juice", "Grape Juice", "Cranberry Juice", "Pineapple Juice", "Mango Juice", "Watermelon Juice", "Coconut Water", "Sparkling Water", "Soda",
+        "Cola", "Ginger Ale", "Root Beer", "Energy Drink", "Beer", "Wine", "Champagne", "Whiskey", "Vodka", "Tequila",
+        "Rum", "Gin", "Brandy", "Cocktail", "Martini", "Margarita", "Mojito", "Sangria", "Bloody Mary", "Pina Colada",
+        "Bread", "Toast", "Butter", "Peanut Butter", "Jelly", "Jam", "Honey", "Maple Syrup", "Ketchup", "Mustard",
+        "Mayonnaise", "Hot Sauce", "Soy Sauce", "Vinegar", "Olive Oil", "Salt", "Pepper", "Garlic", "Onion", "Ginger",
+        "Basil", "Oregano", "Thyme", "Rosemary", "Cilantro", "Parsley", "Cinnamon", "Nutmeg", "Vanilla", "Mint",
+        "Orange", "Lemon", "Lime", "Grapefruit", "Strawberry", "Blueberry", "Raspberry", "Blackberry", "Cranberry", "Cherry",
+        "Peach", "Plum", "Apricot", "Pear", "Pineapple", "Mango", "Papaya", "Watermelon", "Cantaloupe", "Honeydew",
+        "Kiwi", "Pomegranate", "Fig", "Date", "Coconut", "Avocado", "Tomato", "Potato", "Sweet Potato", "Yam",
+        "Carrot", "Celery", "Broccoli", "Cauliflower", "Cabbage", "Lettuce", "Spinach", "Kale", "Arugula", "Cucumber",
+        "Zucchini", "Eggplant", "Bell Pepper", "Jalapeno", "Habanero", "Pumpkin", "Squash", "Green Bean", "Pea", "Corn",
+        "Mushroom", "Tofu", "Tempeh", "Lentil", "Chickpea", "Black Bean", "Kidney Bean", "Pinto Bean", "Almond", "Walnut",
+        "Cashew", "Pecan", "Pistachio", "Hazelnut", "Macadamia", "Peanut", "Sunflower Seed", "Pumpkin Seed", "Chia Seed", "Flaxseed",
+        "Quinoa", "Rice", "Oats", "Barley", "Wheat", "Rye", "Couscous", "Polenta", "Tortilla", "Pita",
+        "Naan", "Baguette", "Ciabatta", "Sourdough", "Brioche", "Pretzel", "Popcorn", "Potato Chip", "Tortilla Chip", "Crackers",
+        "Granola", "Cereal", "Yogurt", "Cottage Cheese", "Sour Cream", "Heavy Cream", "Milk", "Butter", "Ghee", "Provolone",
+        "Cheddar", "Mozzarella", "Parmesan", "Swiss Cheese", "Feta", "Gouda", "Brie", "Camembert", "Blue Cheese", "Ricotta",
+        "Shrimp", "Crab", "Lobster", "Salmon", "Tuna", "Cod", "Halibut", "Trout", "Sardine", "Anchovy",
+        "Scallop", "Mussel", "Oyster", "Clam", "Squid", "Octopus", "Bacon", "Ham", "Salami", "Pepperoni",
+        "Prosciutto", "Bologna", "Turkey", "Chicken", "Duck", "Venison", "Lamb", "Veal", "Beef", "Meatball"
+      ]
+    },
+    {
+      "name": "Movies & TV Shows",
+      "terms": [
+        "Titanic", "Avatar", "Star Wars", "Toy Story", "Jaws", "Inception", "Gladiator", "The Matrix", "Jurassic Park", "Harry Potter",
+        "Spider-Man", "Batman", "The Godfather", "Frozen", "Shrek", "The Avengers", "Interstellar", "Pulp Fiction", "Forrest Gump", "The Lion King",
+        "Finding Nemo", "Up", "WALL-E", "Coco", "Moana", "Cinderella", "Aladdin", "Beauty and the Beast", "Mulan", "Hercules",
+        "Tarzan", "Bambis", "Dumbo", "Pinocchio", "Snow White", "Sleeping Beauty", "Peter Pan", "Alice in Wonderland", "The Little Mermaid", "Pocahontas",
+        "The Incredibles", "Ratatouille", "Cars", "Brave", "Inside Out", "Zootopia", "Big Hero 6", "Wreck-It Ralph", "Tangled", "Monsters Inc",
+        "Lord of the Rings", "The Hobbit", "Indiana Jones", "Back to the Future", "Terminator", "Alien", "Predator", "Die Hard", "Rocky", "Rambo",
+        "Gladiator", "Braveheart", "300", "Troy", "The Departed", "Goodfellas", "Scarface", "Casino", "Fight Club", "Se7en",
+        "Silence of the Lambs", "The Shining", "Exorcist", "Halloween", "Friday the 13th", "A Nightmare on Elm Street", "Scream", "Saw", "The Conjuring", "Hereditary",
+        "La La Land", "Whiplash", "Birdman", "Parasite", "Nomadland", "Moonlight", "Spotlight", "Green Book", "1917", "Dunkirk",
+        "The Truman Show", "Eternal Sunshine", "Her", "Blade Runner", "Dune", "Arrival", "Gravity", "Interstellar", "Contact", "The Martian",
+        "Breaking Bad", "Game of Thrones", "Stranger Things", "The Office", "Friends", "Seinfeld", "The Simpsons", "Family Guy", "South Park", "Futurama",
+        "Rick and Morty", "BoJack Horseman", "Archer", "Bob's Burgers", "The Mandalorian", "The Witcher", "Succession", "The Crown", "Sherlock", "Doctor Who",
+        "Supernatural", "The Walking Dead", "Lost", "Prison Break", "Dexter", "Hannibal", "True Detective", "Fargo", "Better Call Saul", "Ozark",
+        "Peaky Blinders", "Viking", "The Last Kingdom", "Westworld", "Black Mirror", "Dark", "The Boys", "Invincible", "Arcane", "Cyberpunk Edgerunners",
+        "Narcos", "Money Heist", "Squid Game", "Euphoria", "The Bear", "Ted Lasso", "Hacks", "Abbott Elementary", "Only Murders in the Building", "Severance",
+        "Cobra Kai", "Wednesday", "The Queen's Gambit", "Bridgerton", "The Umbrella Academy", "Loki", "WandaVision", "Hawkeye", "Moon Knight", "Ms Marvel",
+        "She-Hulk", "Secret Invasion", "Echo", "Agatha All Along", "Daredevil", "The Punisher", "Jessica Jones", "Luke Cage", "Iron Fist", "The Defenders",
+        "Steven Spielberg", "Christopher Nolan", "Quentin Tarantino", "Martin Scorsese", "Stanley Kubrick", "James Cameron", "Ridley Scott", "Tim Burton", "David Fincher", "Denis Villeneuve",
+        "Hayao Miyazaki", "Akira Kurosawa", "Alfred Hitchcock", "George Lucas", "Francis Ford Coppola", "Clint Eastwood", "Wes Anderson", "Taika Waititi", "Greta Gerwig", "Jordan Peele",
+        "Leonardo DiCaprio", "Brad Pitt", "Tom Cruise", "Johnny Depp", "Robert Downey Jr", "Chris Hemsworth", "Chris Evans", "Scarlett Johansson", "Margot Robbie", "Zendaya",
+        "Meryl Streep", "Tom Hanks", "Denzel Washington", "Morgan Freeman", "Samuel L Jackson", "Keanu Reeves", "Will Smith", "Matt Damon", "Ben Affleck", "Christian Bale",
+        "Joaquin Phoenix", "Heath Ledger", "Ryan Gosling", "Ryan Reynolds", "Hugh Jackman", "Chris Pratt", "Benedict Cumberbatch", "Tom Holland", "Florence Pugh", "Ana de Armas",
+        "Pedro Pascal", "Oscar Isaac", "Timothee Chalamet", "Austin Butler", "Cillian Murphy", "Barry Keoghan", "Paul Mescal", "Florence Pugh", "Zendaya", "Sydney Sweeney",
+        "Animation", "Comedy", "Drama", "Action", "Thriller", "Horror", "Sci-Fi", "Fantasy", "Romance", "Western",
+        "Documentary", "Musical", "Mystery", "Crime", "Adventure", "Family", "Biography", "History", "War", "Sport",
+        "Director", "Producer", "Screenwriter", "Cinematographer", "Editor", "Composer", "Actor", "Actress", "Stunt", "Casting",
+        "Box Office", "Blockbuster", "Indie", "Cannes", "Oscars", "Emmy", "Grammy", "Golden Globe", "BAFTA", "Sundance",
+        "Sequel", "Prequel", "Spin-off", "Remake", "Reboot", "Adaptation", "Trilogy", "Franchise", "Universe", "Crossover",
+        "Soundtrack", "Score", "VFX", "CGI", "Green Screen", "Storyboard", "Script", "Dialogue", "Scene", "Shot"
+      ]
+    },
+    {
+      "name": "Geography & Places",
+      "terms": [
+        "Paris", "Tokyo", "London", "New York", "Beach", "Mountain", "Desert", "Library", "Hospital", "Airport",
+        "Museum", "Restaurant", "School", "Supermarket", "Castle", "Rome", "Sydney", "Cairo", "Berlin", "Toronto",
+        "Beijing", "Moscow", "Rio de Janeiro", "Bangkok", "Dubai", "Singapore", "Hong Kong", "Amsterdam", "Venice", "Barcelona",
+        "Madrid", "Vienna", "Prague", "Budapest", "Athens", "Istanbul", "Jerusalem", "Mumbai", "Delhi", "Seoul",
+        "Kyoto", "Osaka", "Melbourne", "Auckland", "Vancouver", "Montreal", "Mexico City", "Buenos Aires", "Lima", "Santiago",
+        "Bogota", "Caracas", "San Francisco", "Los Angeles", "Chicago", "Miami", "Las Vegas", "Seattle", "Boston", "Washington DC",
+        "Mount Everest", "K2", "Mount Kilimanjaro", "Mont Blanc", "Mount Fuji", "Rocky Mountains", "Andes", "Himalayas", "Alps", "Appalachians",
+        "Sahara Desert", "Gobi Desert", "Mojave Desert", "Atacama Desert", "Kalahari Desert", "Amazon Rainforest", "Congo Basin", "Black Forest", "Sherwood Forest", "Grand Canyon",
+        "Great Barrier Reef", "Victoria Falls", "Niagara Falls", "Angel Falls", "Iguazu Falls", "Amazon River", "Nile River", "Mississippi River", "Yangtze River", "Danube River",
+        "Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Southern Ocean", "Mediterranean Sea", "Caribbean Sea", "Red Sea", "Baltic Sea", "Black Sea",
+        "Eiffel Tower", "Statue of Liberty", "Colosseum", "Great Wall of China", "Taj Mahal", "Big Ben", "Sydney Opera House", "Machu Picchu", "Pyramids of Giza", "Christ the Redeemer",
+        "Burj Khalifa", "Empire State Building", "Golden Gate Bridge", "Tower Bridge", "Louvre", "British Museum", "Vatican City", "Stonehenge", "Mount Rushmore", "Hollywood Sign",
+        "Hospital", "Pharmacy", "Clinic", "Dentist", "Optometrist", "Veterinary", "Police Station", "Fire Station", "Post Office", "Bank",
+        "Library", "Bookstore", "University", "College", "High School", "Elementary School", "Kindergarten", "Museum", "Gallery", "Theater",
+        "Cinema", "Stadium", "Arena", "Gymnasium", "Swimming Pool", "Park", "Zoo", "Aquarium", "Botanical Garden", "Amusement Park",
+        "Airport", "Train Station", "Subway Station", "Bus Station", "Port", "Harbor", "Marina", "Highway", "Bridge", "Tunnel",
+        "Hotel", "Motel", "Resort", "Hostel", "Restaurant", "Cafe", "Bakery", "Bar", "Pub", "Nightclub",
+        "Supermarket", "Grocery Store", "Mall", "Department Store", "Boutique", "Convenience Store", "Market", "Bazaar", "Factory", "Warehouse",
+        "Office", "Skyscraper", "Headquarters", "Embassy", "Consulate", "City Hall", "Courthouse", "Prison", "Jail", "Church",
+        "Cathedral", "Chapel", "Mosque", "Temple", "Synagogue", "Monastery", "Convent", "Cemetery", "Graveyard", "Mausoleum",
+        "Island", "Peninsula", "Isthmus", "Archipelago", "Atoll", "Lagoon", "Bay", "Gulf", "Strait", "Fjord",
+        "Valley", "Canyon", "Plateau", "Plain", "Meadow", "Savanna", "Steppe", "Tundra", "Taiga", "Glacier",
+        "Volcano", "Geyser", "Hot Spring", "Crave", "Cavern", "Waterfall", "Oasis", "Delta", "Estuary", "Marsh",
+        "Swamp", "Bog", "Mangrove", "Jungle", "Rainforest", "Woodland", "Orchard", "Vineyard", "Farm", "Ranch",
+        "Suburb", "Urban", "Rural", "Metropolis", "Town", "Village", "Hamlet", "Province", "State", "Country",
+        "Continent", "Hemisphere", "Equator", "Prime Meridian", "Latitude", "Longitude", "Compass", "Map", "Globe", "Atlas",
+        "United States", "Canada", "Mexico", "Brazil", "Argentina", "United Kingdom", "France", "Germany", "Italy", "Spain",
+        "Russia", "China", "Japan", "India", "Australia", "South Africa", "Egypt", "Nigeria", "Kenya", "Saudi Arabia",
+        "United Arab Emirates", "Israel", "Greece", "Switzerland", "Sweden", "Norway", "Denmark", "Finland", "Netherlands", "Belgium",
+        "Portugal", "Poland", "Ukraine", "Ireland", "New Zealand", "South Korea", "Indonesia", "Malaysia", "Philippines", "Thailand"
+      ]
+    },
+    {
+      "name": "Professions & Jobs",
+      "terms": [
+        "Doctor", "Teacher", "Chef", "Engineer", "Artist", "Lawyer", "Firefighter", "Pilot", "Astronaut", "Detective",
+        "Veterinarian", "Dentist", "Architect", "Photographer", "Musician", "Nurse", "Surgeon", "Pharmacist", "Psychiatrist", "Psychologist",
+        "Professor", "Principal", "Tutor", "Researcher", "Scientist", "Biologist", "Chemist", "Physicist", "Astronomer", "Geologist",
+        "Software Engineer", "Data Scientist", "Web Developer", "Cybersecurity Analyst", "System Administrator", "IT Support", "Product Manager", "UI UX Designer", "Game Developer", "Network Engineer",
+        "Accountant", "Auditor", "Financial Analyst", "Banker", "Economist", "Actuary", "Stockbroker", "Real Estate Agent", "Consultant", "Entrepreneur",
+        "Marketing Manager", "Copywriter", "Graphic Designer", "Art Director", "Journalist", "Editor", "Author", "Translator", "Public Relations", "Social Media Manager",
+        "Electrician", "Plumber", "Carpenter", "Welder", "Mechanic", "Painter", "Mason", "Roofing Contractor", "HVAC Technician", "Locksmith",
+        "Chef", "Baker", "Bartender", "Waiter", "Waitress", "Barista", "Sommelier", "Hotel Manager", "Event Planner", "Tour Guide",
+        "Police Officer", "Detective", "Security Guard", "Private Investigator", "Lawyer", "Judge", "Paralegal", "Court Reporter", "Correctional Officer", "Forensic Scientist",
+        "Soldier", "Sailor", "Airman", "Marine", "Coast Guard", "General", "Commander", "Captain", "Lieutenant", "Sergeant",
+        "Farmer", "Rancher", "Agronomist", "Forester", "Fisherman", "Geologist", "Meteorologist", "Environmental Scientist", "Conservationist", "Park Ranger",
+        "Actor", "Actress", "Director", "Producer", "Screenwriter", "Stuntperson", "Cinematographer", "Musician", "Singer", "Composer",
+        "Dancer", "Choreographer", "Model", "Fashion Designer", "Stylist", "Makeup Artist", "Hairdresser", "Tailor", "Jeweler", "Interior Designer",
+        "Athlete", "Coach", "Referee", "Personal Trainer", "Yoga Instructor", "Sports Commentator", "Physical Therapist", "Chiropractor", "Massage Therapist", "Nutritionist",
+        "Pilot", "Flight Attendant", "Air Traffic Controller", "Train Conductor", "Bus Driver", "Truck Driver", "Taxi Driver", "Delivery Driver", "Sailor", "Captain",
+        "Postman", "Courier", "Librarian", "Archivist", "Curator", "Social Worker", "Counselor", "Therapist", "Clergy", "Priest",
+        "Pastor", "Rabbi", "Imam", "Monk", "Nun", "Missionary", "Politician", "Diplomat", "Ambassador", "Mayor",
+        "Governor", "Senator", "Congressperson", "President", "Prime Minister", "Civil Servant", "Urban Planner", "Tax Inspector", "Customs Officer", "Lifeguard",
+        "Paramedic", "EMT", "Search and Rescue", "Disaster Relief", "Volunteer", "Philanthropist", "Activists", "Lobbyist", "Union Leader", "Biochemist",
+        "Nanotechnologist", "Roboticist", "Aerospace Engineer", "Civil Engineer", "Mechanical Engineer", "Electrical Engineer", "Chemical Engineer", "Biomedical Engineer", "Nuclear Engineer", "Petroleum Engineer",
+        "Mine Worker", "Oil Rigger", "Stevedore", "Longshoreman", "Warehouse Worker", "Forklift Operator", "Cleaner", "Janitor", "Housekeeper", "Gardener",
+        "Landscaper", "Florist", "Zookeeper", "Animal Trainer", "Pet Groomer", "Dog Walker", "Clerk", "Receptionist", "Secretary", "Executive Assistant"
+      ]
+    },
+    {
+      "name": "Science & Nature",
+      "terms": [
+        "Hydrogen", "Helium", "Lithium", "Carbon", "Nitrogen", "Oxygen", "Fluorine", "Neon", "Sodium", "Magnesium",
+        "Aluminum", "Silicon", "Phosphorus", "Sulfur", "Chlorine", "Argon", "Potassium", "Calcium", "Iron", "Nickel",
+        "Copper", "Zinc", "Silver", "Gold", "Platinum", "Mercury", "Lead", "Uranium", "Plutonium", "Titanium",
+        "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto", "Sun",
+        "Moon", "Asteroid", "Comet", "Meteor", "Meteorite", "Black Hole", "Supernova", "Nebula", "Galaxy", "Milky Way",
+        "Andromeda", "Constellation", "Quasar", "Pulsar", "Exoplanet", "Solar System", "Universe", "Gravity", "Orbit", "Eclipse",
+        "Photosynthesis", "Cell", "Nucleus", "DNA", "RNA", "Chromosome", "Gene", "Protein", "Enzyme", "Bacteria",
+        "Virus", "Fungus", "Archaea", "Ecosystem", "Biome", "Biosphere", "Trophic Level", "Food Web", "Producer", "Consumer",
+        "Decomposer", "Evolution", "Natural Selection", "Mutation", "Adaptation", "Speciation", "Extinction", "Fossil", "Stratigraphy", "Tectonic Plates",
+        "Earthquake", "Tsunami", "Volcano", "Magma", "Lava", "Tornado", "Hurricane", "Typhoon", "Cyclone", "Blizzard",
+        "Drought", "Flood", "Wildfire", "Avalanche", "Landslide", "Monsoon", "El Nino", "La Nina", "Greenhouse Effect", "Global Warming",
+        "Atom", "Electron", "Proton", "Neutron", "Quark", "Molecule", "Compound", "Ion", "Isotope", "Plasma",
+        "Solid", "Liquid", "Gas", "Bose-Einstein Condensate", "Entropy", "Thermodynamics", "Kinetic Energy", "Potential Energy", "Velocity", "Acceleration",
+        "Force", "Mass", "Weight", "Momentum", "Friction", "Magnetism", "Electricity", "Voltage", "Current", "Resistance",
+        "Wavelength", "Frequency", "Spectrum", "Photon", "Laser", "Relativity", "Quantum", "Radioactivity", "Fission", "Fusion",
+        "Mitosis", "Meiosis", "Osmosis", "Diffusion", "Respiration", "Fermentation", "Metabolism", "Homeostasis", "Immune System", "Antibody",
+        "Antigen", "Pathogen", "Vaccine", "Antibiotic", "Hormone", "Neurotransmitter", "Synapse", "Neuron", "Brain", "Spinal Cord",
+        "Heart", "Lung", "Liver", "Kidney", "Stomach", "Intestine", "Pancreas", "Spleen", "Thyroid", "Adrenal",
+        "Blood", "Plasma", "Platelet", "Hemoglobin", "Bone", "Cartilage", "Ligament", "Tendon", "Muscle", "Skin",
+        "Epidermis", "Dermis", "Hair", "Nail", "Eye", "Ear", "Nose", "Tongue", "Olfactory", "Auditory",
+        "Taxonomy", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Binomial Nomenclature", "Cladistics",
+        "Botany", "Zoology", "Microbiology", "Genetics", "Ecology", "Paleontology", "Anthropology", "Archaeology", "Geology", "Meteorology",
+        "Oceanography", "Astronomy", "Astrophysics", "Cosmology", "Quantum Mechanics", "Organic Chemistry", "Inorganic Chemistry", "Biochemistry", "Analytical Chemistry", "Physical Chemistry"
+      ]
+    },
+    {
+      "name": "Sports & Games",
+      "terms": [
+        "Basketball", "Football", "Soccer", "Tennis", "Badminton", "Golf", "Surfing", "Chess", "Gymnastics", "Skiing",
+        "Boxing", "Volleyball", "Cycling", "Archery", "Bowling", "Baseball", "Cricket", "Rugby", "Hockey", "Ice Hockey",
+        "Field Hockey", "Lacrosse", "Polo", "Water Polo", "Handball", "Dodgeball", "Table Tennis", "Squash", "Racquetball", "Badminton",
+        "Track and Field", "Marathon", "Sprinting", "Hurdles", "Long Jump", "High Jump", "Pole Vault", "Shot Put", "Discus", "Javelin",
+        "Decathlon", "Triathlon", "Pentathlon", "Swimming", "Diving", "Synchronized Swimming", "Water Polo", "Rowing", "Canoeing", "Kayaking",
+        "Sailing", "Yachting", "Surfing", "Windsurfing", "Kitesurfing", "Paddleboarding", "Wakeboarding", "Water Skiing", "Snorkeling", "Scuba Diving",
+        "Freediving", "Weightlifting", "Powerlifting", "Bodybuilding", "CrossFit", "Wrestling", "Judo", "Karate", "Taekwondo", "Aikido",
+        "Jiu-Jitsu", "Kung Fu", "Muay Thai", "Kickboxing", "Fencing", "Kendo", "Sumo", "MMA", "UFC", "Boxing",
+        "Cycling", "Mountain Biking", "BMX", "Skateboarding", "Rollerblading", "Ice Skating", "Figure Skating", "Speed Skating", "Skiing", "Snowboarding",
+        "Sledding", "Bobsled", "Luge", "Skeleton", "Curling", "Mountaineering", "Rock Climbing", "Bouldering", "Hiking", "Trekking",
+        "Equestrian", "Horse Racing", "Show Jumping", "Dressage", "Polo", "Motorsport", "Formula 1", "Nascar", "MotoGP", "Rallying",
+        "Karting", "Drag Racing", "IndyCar", "Supercross", "Motocross", "Darts", "Billiards", "Pool", "Snooker", "Bowling",
+        "Skittles", "Bocce", "Croquet", "Horseshoe", "Cornhole", "Frisbee", "Ultimate Frisbee", "Disc Golf", "Dodgeball", "Capture the Flag",
+        "Monopoly", "Scrabble", "Chess", "Checkers", "Backgammon", "Risk", "Catan", "Carcassonne", "Ticket to Ride", "Pandemic",
+        "Clue", "Risk", "Battleship", "Operation", "Twister", "Jenga", "Uno", "Poker", "Blackjack", "Roulette",
+        "Baccarat", "Craps", "Solitaire", "Bridge", "Whist", "Euchre", "Hearts", "Spades", "Gin Rummy", "Canasta",
+        "Mahjong", "Dominoes", "Dice", "Dungeons and Dragons", "Warhammer", "Magic the Gathering", "Pokemon TCG", "Yu-Gi-Oh", "Board Game", "Card Game",
+        "Video Game", "Console", "PC Gaming", "PlayStation", "Xbox", "Nintendo Switch", "Steam", "Esports", "League of Legends", "Dota",
+        "Counter-Strike", "Valorant", "Fortnite", "Minecraft", "Roblox", "World of Warcraft", "Overwatch", "Apex Legends", "Call of Duty", "Grand Theft Auto"
+      ]
+    },
+    {
+      "name": "Technology & Gadgets",
+      "terms": [
+        "Drone", "Robot Vacuum", "Smartphone", "Smartwatch", "Printer", "Router", "Charger", "Password", "Keyboard", "Headphones",
+        "Virtual Reality", "Hard Drive", "Tablet", "Microchip", "Satellite", "Laptop", "Desktop", "Monitor", "Mouse", "Speaker",
+        "Microphone", "Webcam", "Flash Drive", "SSD", "RAM", "CPU", "GPU", "Motherboard", "Power Supply", "Cooling Fan",
+        "Smart TV", "Streaming Stick", "Projector", "Soundbar", "Subwoofer", "Earbuds", "Bluetooth", "Wi-Fi", "Ethernet", "Modem",
+        "Fiber Optic", "SIM Card", "eSIM", "Power Bank", "Charging Pad", "Smart Plug", "Smart Bulb", "Thermostat", "Security Camera", "Video Doorbell",
+        "Smart Lock", "Fitness Tracker", "Heart Rate Monitor", "VR Headset", "AR Glasses", "E-Reader", "Graphics Tablet", "Stylus", "External Battery", "Docking Station",
+        "OS", "Windows", "macOS", "Linux", "iOS", "Android", "ChromeOS", "Ubuntu", "Unix", "BIOS",
+        "Firmware", "Driver", "Kernel", "Algorithm", "Database", "Cloud", "Server", "API", "Encryption", "Firewall",
+        "Antivirus", "Malware", "Phishing", "VPN", "IP Address", "URL", "HTML", "CSS", "JavaScript", "Python",
+        "C++", "Java", "SQL", "Git", "GitHub", "Docker", "Kubernetes", "Artificial Intelligence", "Machine Learning", "Neural Network",
+        "Deep Learning", "NLP", "Computer Vision", "Generative AI", "LLM", "Chatbot", "Automation", "IoT", "Blockchain", "Cryptocurrency",
+        "Bitcoin", "Ethereum", "NFT", "Smart Contract", "Quantum Computing", "Supercomputer", "Mainframe", "Server Rack", "Data Center", "Fiber Cable",
+        "GPS", "GIS", "Radar", "Sonar", "Lidar", "NFC", "RFID", "QR Code", "Barcode", "Biometrics",
+        "Face ID", "Touch ID", "Fingerprint Scanner", "Retina Scan", "Voice Recognition", "Siri", "Alexa", "Google Assistant", "Cortana", "Bixby",
+        "3D Printer", "CNC Machine", "Laser Cutter", "Hologram", "Exoskeleton", "Bionic Limb", "Pacemaker", "Cochlear Implant", "Neuralink", "Autonomous Car",
+        "EV", "Hybrid", "Supercharger", "Battery Management", "Lithium Ion", "Solid State Battery", "Solar Panel", "Wind Turbine", "Smart Grid", "Inverter",
+        "Transistor", "Resistor", "Capacitor", "Inductor", "Diode", "LED", "OLED", "LCD", "Plasma Display", "E-Ink",
+        "Touchscreen", "Capacitive", "Resistive", "Stylus", "Haptic Feedback", "Rumble Pack", "Gyroscope", "Accelerometer", "Magnetometer", "Barometer",
+        "Thermometer", "Hygrometer", "Proximity Sensor", "Ambient Light", "Geiger Counter", "Spectrometer", "Seismograph", "Anemometer", "Tachoscope", "Oscilloscope",
+        "Multimeter", "Soldering Iron", "Breadboard", "PCB", "Solder", "Flux", "Wire Stripper", "Crimper", "Cable Tester", "Logic Analyzer"
+      ]
+    },
+    {
+      "name": "Household Items",
+      "terms": [
+        "Umbrella", "Bicycle", "Clock", "Hammer", "Laptop", "Compass", "Key", "Camera", "Pillow", "Mirror",
+        "Ladder", "Candle", "Suitcase", "Paintbrush", "Microphone", "Couch", "Sofa", "Armchair", "Recliner", "Ottoman",
+        "Coffee Table", "Dining Table", "Desk", "Bookshelf", "Cabinet", "Dresser", "Wardrobe", "Nightstand", "Bed", "Mattress",
+        "Bunk Bed", "Futon", "Rug", "Carpet", "Curtain", "Blinds", "Lamp", "Chandelier", "Sconce", "Lantern",
+        "Television", "Remote Control", "Stereo", "Turntable", "Record Player", "Toaster", "Blender", "Microwave", "Refrigerator", "Freezer",
+        "Oven", "Stove", "Dishwasher", "Coffee Maker", "Kettle", "Juicer", "Food Processor", "Mixer", "Slow Cooker", "Air Fryer",
+        "Washing Machine", "Dryer", "Iron", "Ironing Board", "Vacuum Cleaner", "Mop", "Broom", "Dustpan", "Trash Can", "Recycling Bin",
+        "Plunger", "Toilet Brush", "Shower Curtain", "Bath Mat", "Towel", "Washcloth", "Toothbrush", "Toothpaste", "Soap", "Shampoo",
+        "Conditioner", "Hairdryer", "Hair Straightener", "Razor", "Shaving Cream", "Deodorant", "Perfume", "Cologne", "Lotion", "Sunscreen",
+        "Plate", "Bowl", "Cup", "Mug", "Glass", "Wine Glass", "Fork", "Knife", "Spoon", "Spatula",
+        "Whisk", "Ladle", "Tongs", "Peeler", "Grater", "Colander", "Cutting Board", "Frying Pan", "Saucepan", "Pot",
+        "Baking Sheet", "Casserole Dish", "Rolling Pin", "Measuring Cup", "Can Opener", "Corkscrew", "Bottle Opener", "Napkin", "Tablecloth", "Place Mat",
+        "Pillowcase", "Bedsheet", "Blanket", "Comforter", "Duvet", "Quilt", "Throws", "Hanger", "Laundry Basket", "Clothesline",
+        "Screwdriver", "Pliers", "Wrench", "Saw", "Drill", "Tape Measure", "Level", "Utility Knife", "Sandpaper", "Nail",
+        "Screw", "Bolt", "Nut", "Washer", "Glue", "Tape", "Scissors", "Flashlight", "Extension Cord", "Power Strip",
+        "Smoke Detector", "Carbon Monoxide Detector", "Fire Extinguisher", "First Aid Kit", "Thermometer", "Scale", "Clock", "Alarm Clock", "Calendar", "Planner",
+        "Pen", "Pencil", "Marker", "Highlighter", "Eraser", "Ruler", "Stapler", "Paperclip", "Binder", "Folder",
+        "Envelope", "Stamp", "Notebook", "Notepad", "Sticky Notes", "Tissues", "Toilet Paper", "Paper Towel", "Aluminum Foil", "Plastic Wrap",
+        "Ziploc Bag", "Sponge", "Scouring Pad", "Dish Soap", "Laundry Detergent", "Fabric Softener", "Bleach", "Disinfectant", "Air Freshener", "Mothballs",
+        "Doorbell", "Doorknob", "Keyhole", "Padlock", "Chain", "Hinge", "Vent", "Radiator", "Air Conditioner", "Fan",
+        "Humidifier", "Dehumidifier", "Purifier", "Safe", "Mailbox", "Doormat", "Plant Pot", "Vase", "Picture Frame", "Painting"
+      ]
+    },
+    {
+      "name": "Clothing & Fashion",
+      "terms": [
+        "Nike", "Apple", "McDonald's", "Coca-Cola", "Adidas", "Starbucks", "Google", "Amazon", "Samsung", "Disney",
+        "Shirt", "T-Shirt", "Blouse", "Sweater", "Cardigan", "Hoodie", "Sweatshirt", "Jacket", "Coat", "Blazer",
+        "Suit", "Tuxedo", "Vest", "Poncho", "Cape", "Parka", "Windbreaker", "Trench Coat", "Raincoat", "Puffer Jacket",
+        "Jeans", "Trousers", "Pants", "Leggings", "Joggers", "Sweatpants", "Cargo Pants", "Chinos", "Shorts", "Capris",
+        "Skirt", "Mini Skirt", "Maxi Skirt", "Pencil Skirt", "Dress", "Gown", "Sundress", "Cocktail Dress", "Prom Dress", "Wedding Dress",
+        "Underwear", "Briefs", "Boxers", "Panties", "Thong", "Bra", "Sports Bra", "Lingerie", "Corset", "Socks",
+        "Ankle Socks", "Knee Socks", "Tights", "Stockings", "Pantyhose", "Sleepwear", "Pajamas", "Nightgown", "Robe", "Swimwear",
+        "Bikini", "One-Piece", "Trunks", "Boardshorts", "Rash Guard", "Shoes", "Sneakers", "Boots", "Ankle Boots", "Chelsea Boots",
+        "Combat Boots", "Loafers", "Oxfords", "Brogues", "Flats", "Heels", "Stilettos", "Wedges", "Sandals", "Flip-Flops",
+        "Slides", "Slippers", "Clogs", "Moccasins", "Hat", "Cap", "Beanie", "Fedora", "Beret", "Bucket Hat",
+        "Scarf", "Shawl", "Stole", "Gloves", "Mittens", "Belt", "Suspenders", "Tie", "Bow Tie", "Cufflinks",
+        "Pocket Square", "Sunglasses", "Eyeglasses", "Watch", "Handbag", "Purse", "Clutch", "Tote Bag", "Backpack", "Messenger Bag",
+        "Briefcase", "Duffle Bag", "Fanny Pack", "Wallet", "Coin Purse", "Card Holder", "Umbrella", "Jewelry", "Necklace", "Pendant",
+        "Choker", "Ring", "Earrings", "Bracelet", "Bangle", "Anklet", "Brooch", "Tiara", "Crown", "Cuff",
+        "Cotton", "Wool", "Silk", "Linen", "Denim", "Leather", "Suede", "Velvet", "Satin", "Chiffon",
+        "Flannel", "Fleece", "Polyester", "Nylon", "Spandex", "Acrylic", "Rayon", "Viscose", "Tweed", "Corduroy",
+        "Canvas", "Tartan", "Plaid", "Stripes", "Polka Dot", "Floral", "Animal Print", "Tie-Dye", "Embroidery", "Lace",
+        "Sequins", "Beads", "Frills", "Ruffles", "Pleats", "Pockets", "Zippers", "Buttons", "Velcro", "Snap",
+        "Haute Couture", "Ready-to-Wear", "Runway", "Fashion Show", "Designer", "Stylist", "Model", "Lookbook", "Vogue", "Trend",
+        "Vintage", "Thrifting", "Streetwear", "Athleisure", "Boho", "Preppy", "Goth", "Punk", "Grunge", "Formal"
+      ]
+    },
+    {
+      "name": "Music & Instruments",
+      "terms": [
+        "Taylor Swift", "Beyoncé", "Drake", "Ed Sheeran", "Billie Eilish", "Tom Cruise", "Ariana Grande", "The Beatles", "Elvis Presley", "Michael Jackson",
+        "Ronaldo", "Messi", "LeBron James", "Katy Perry", "Rihanna", "Justin Bieber", "Bruno Mars", "Lady Gaga", "The Weeknd", "Dua Lipa",
+        "Post Malone", "Shawn Mendes", "Camila Cabello", "Harry Styles", "Olivia Rodrigo", "Bad Bunny", "Rosalia", "J Balvin", "Shakira", "Jennifer Lopez",
+        "Eminem", "Snoop Dogg", "Dr Dre", "Jay-Z", "Kanye West", "Kendrick Lamar", "J Cole", "Travis Scott", "Cardi B", "Nicki Minaj",
+        "Queen", "Pink Floyd", "Led Zeppelin", "The Rolling Stones", "AC DC", "Metallica", "Guns N Roses", "Nirvana", "Green Day", "Foo Fighters",
+        "Coldplay", "Imagine Dragons", "Maroon 5", "One Direction", "BTS", "BLACKPINK", "EXO", "Twice", "Stray Kids", "NewJeans",
+        "Guitar", "Acoustic Guitar", "Electric Guitar", "Bass Guitar", "Ukulele", "Banjo", "Mandolin", "Harp", "Violin", "Viola",
+        "Cello", "Double Bass", "Piano", "Keyboard", "Synthesizer", "Organ", "Accordion", "Harmonica", "Melodica", "Flute",
+        "Piccolo", "Clarinet", "Oboe", "Bassoon", "Saxophone", "Trumpet", "Trombone", "French Horn", "Tuba", "Drum Kit",
+        "Snare Drum", "Bass Drum", "Cymbal", "Hi-Hat", "Tambourine", "Maracas", "Xylophone", "Marimba", "Vibraphone", "Bongo",
+        "Conga", "Djembe", "Cajon", "Triangle", "Gong", "Bagpipes", "Sitar", "Tabla", "Oud", "Symphony",
+        "Orchestra", "Band", "Choir", "Conductor", "Composer", "Singer", "Rapper", "DJ", "Producer", "Songwriter",
+        "Rock", "Pop", "Hip Hop", "Rap", "R&B", "Soul", "Jazz", "Blues", "Classical", "Country",
+        "Electronic", "EDM", "House", "Techno", "Trance", "Dubstep", "Reggae", "Ska", "Metal", "Heavy Metal",
+        "Punk Rock", "Grunge", "Indie Rock", "Alternative", "Folk", "Gospel", "Opera", "Latin", "K-Pop", "J-Pop",
+        "Album", "Single", "EP", "Mixtape", "Soundtrack", "Concert", "Festival", "Tour", "Grammy", "Billboard",
+        "Spotify", "Apple Music", "Vinyl", "CD", "Cassette", "Streaming", "Headphones", "Speaker", "Microphone", "Amplifier"
+      ]
+    },
+    {
+      "name": "History & Mythology",
+      "terms": [
+        "Zeus", "Poseidon", "Hades", "Athena", "Apollo", "Artemis", "Ares", "Aphrodite", "Hermes", "Dionysus",
+        "Hera", "Demeter", "Hephaestus", "Chronos", "Titan", "Thor", "Odin", "Loki", "Freya", "Heimdall",
+        "Ra", "Anubis", "Osiris", "Isis", "Horus", "Seth", "Bastet", "Thoth", "Sphinx", "Minotaur",
+        "Medusa", "Pegasus", "Phoenix", "Dragon", "Griffin", "Kraken", "Hydra", "Cerberus", "Cyclops", "Centaur",
+        "Merlin", "King Arthur", "Excalibur", "Camelot", "Robin Hood", "Joan of Arc", "Cleopatra", "Julius Caesar", "Alexander the Great", "Leonidas",
+        "Spartacus", "Hannibal", "Augustus", "Nero", "Constantine", "Charlemagne", "William the Conqueror", "Richard the Lionheart", "Saladin", "Genghis Khan",
+        "Marco Polo", "Ibn Battuta", "Christopher Columbus", "Ferdinand Magellan", "Vasco da Gama", "Hernan Cortes", "Francisco Pizarro", "Leonardo da Vinci", "Michelangelo", "Galileo Galilei",
+        "Isaac Newton", "Nicolaus Copernicus", "Johannes Gutenberg", "Martin Luther", "Henry VIII", "Elizabeth I", "Mary Queen of Scots", "Louis XIV", "Marie Antoinette", "Napoleon Bonaparte",
+        "George Washington", "Thomas Jefferson", "Benjamin Franklin", "Abraham Lincoln", "Ulysses S Grant", "Robert E Lee", "Sitting Bull", "Crazy Horse", "Harriet Tubman", "Frederick Douglass",
+        "Queen Victoria", "Winston Churchill", "Franklin D Roosevelt", "Adolf Hitler", "Benito Mussolini", "Joseph Stalin", "Vladimir Lenin", "Karl Marx", "Friedrich Engels", "Mahatma Gandhi",
+        "Nelson Mandela", "Martin Luther King Jr", "Rosa Parks", "Malcolm X", "John F Kennedy", "Che Guevara", "Fidel Castro", "Mao Zedong", "Ho Chi Minh", "Albert Einstein",
+        "Ancient Egypt", "Ancient Greece", "Roman Empire", "Mesopotamia", "Babylon", "Assyria", "Persian Empire", "Maya Civilization", "Aztec Empire", "Inca Empire",
+        "Feudalism", "Middle Ages", "Renaissance", "Reformation", "Enlightenment", "Industrial Revolution", "French Revolution", "American Revolution", "Civil War", "World War I",
+        "World War II", "Cold War", "Space Race", "Vietnam War", "Korean War", "Gulf War", "Crusades", "Black Death", "Spanish Inquisition", "Magna Carta",
+        "Declaration of Independence", "Emancipation Proclamation", "Berlin Wall", "Fall of Rome", "Discovery of America", "Moon Landing", "Titanic Sinking", "Pompeii", "Troy", "Atlantis",
+        "Pyramid", "Colosseum", "Parthenon", "Stonehenge", "Machu Picchu", "Chichen Itza", "Petra", "Taj Mahal", "Angkor Wat", "Forbidden City",
+        "Hieroglyphics", "Cuneiform", "Runes", "Papyrus", "Vellum", "Scroll", "Codex", "Manuscript", "Artifact", "Relic",
+        "Kingdom", "Empire", "Dynasty", "Republic", "Monarchy", "Oligarchy", "Democracy", "Dictatorship", "Colony", "Imperialism",
+        "Knight", "Samurai", "Viking", "Gladiator", "Spartan", "Centurion", "Crusader", "Pirate", "Ninja", "Barbarian",
+        "Castle", "Fortress", "Citadel", "Moat", "Drawbridge", "Catapult", "Trebuchet", "Armor", "Shield", "Sword"
+      ]
+    },
+    {
+      "name": "Hobbies & Activities",
+      "terms": [
+        "Painting", "Drawing", "Sketching", "Sculpting", "Pottery", "Ceramics", "Knitting", "Crocheting", "Sewing", "Embroidery",
+        "Cross-Stitch", "Quilting", "Origami", "Calligraphy", "Woodworking", "Carpentry", "Candle Making", "Soap Making", "Beading", "Jewelry Making",
+        "Photography", "Videography", "Vlogging", "Blogging", "Podcasting", "Gaming", "Streaming", "Reading", "Writing", "Journaling",
+        "Poetry", "Gardening", "Bonsai", "Floral Arrangement", "Cooking", "Baking", "Grilling", "Mixology", "Wine Tasting", "Coffee Brewing",
+        "Hiking", "Camping", "Backpacking", "Fishing", "Hunting", "Foraging", "Bird Watching", "Geocaching", "Metal Detecting", "Astronomy",
+        "Stargazing", "Yoga", "Meditation", "Pilates", "Tai Chi", "Running", "Jogging", "Walking", "Cycling", "Swimming",
+        "Weightlifting", "CrossFit", "Dancing", "Ballet", "Salsa", "Tango", "Hip Hop Dance", "Singing", "Karaoke", "Beatboxing",
+        "Magic Tricks", "Juggling", "Ventriloquism", "Stand-Up Comedy", "Improv", "Acting", "Cosplay", "Model Building", "RC Cars", "Drones",
+        "Board Games", "Card Games", "Roleplaying Games", "Chess", "Checkers", "Puzzles", "Crosswords", "Sudoku", "Rubik's Cube", "Collecting",
+        "Stamp Collecting", "Coin Collecting", "Antique Collecting", "Thrifting", "Upcycling", "DIY", "Home Improvement", "Interior Design", "Fashion Design", "Styling",
+        "Language Learning", "Reading Books", "Book Club", "Philosophy", "History Research", "Genealogy", "Volunteering", "Animal Rescue", "Foster Care", "Mentoring",
+        "Tutor", "Coaching", "Scouting", "Surviving", "Bushcraft", "Knots", "Orienteering", "Rockhounding", "Lapidary", "Glassblowing",
+        "Leatherworking", "Bookbinding", "Papercraft", "Decoupage", "Mosaic", "Stained Glass", "Calligraphy", "Typography", "Graphic Design", "Animation",
+        "Coding", "Hacking", "Robotics", "Electronics", "Circuit Bending", "Lockpicking", "Parkour", "Free Running", "Skateboarding", "Rollerblading",
+        "Longboarding", "Surfing", "Snowboarding", "Skiing", "Ice Skating", "Roller Derby", "Paintball", "Airsoft", "Laser Tag", "Escape Rooms",
+        "Trivia", "Pub Quiz", "Karaoke", "Board Game Night", "LAN Party", "Cosplay", "Convention", "Renaissance Fair", "Farmers Market", "Flea Market",
+        "Thrifting", "Yard Sale", "Auction", "Bargain Hunting", "Traveling", "Backpacking", "Road Trip", "Cruising", "Sightseeing", "Camping",
+        "Glamping", "RVing", "Hammocking", "Picnicking", "Sunbathing", "Stargazing", "Cloud Watching", "People Watching", "Journaling", "Scrapbooking"
+      ]
+    },
+    {
+      "name": "Vehicles & Transportation",
+      "terms": [
+        "Car", "Sedan", "SUV", "Truck", "Pickup Truck", "Van", "Minivan", "Coupe", "Convertible", "Hatchback",
+        "Station Wagon", "Limousine", "Sports Car", "Supercar", "Hypercar", "Muscle Car", "Classic Car", "Electric Vehicle", "Hybrid", "Plug-in Hybrid",
+        "Bus", "Coach", "School Bus", "Transit Bus", "Trolleybus", "Tram", "Light Rail", "Subway", "Metro", "Train",
+        "Locomotive", "Passenger Train", "Freight Train", "High-Speed Rail", "Bullet Train", "Monorail", "Steam Train", "Cable Car", "Funicular", "Gondola",
+        "Motorcycle", "Scooter", "Moped", "Dirt Bike", "Chopper", "Cruiser", "Sport Bike", "Quad Bike", "ATV", "Snowmobile",
+        "Jet Ski", "Bicycle", "E-Bike", "Tricycle", "Unicycle", "Skateboard", "Roller Skates", "Segway", "Hoverboard", "Electric Scooter",
+        "Airplane", "Commercial Airliner", "Private Jet", "Propeller Plane", "Biplane", "Seaplane", "Amphibious Vehicle", "Helicopter", "Autogyro", "Blimp",
+        "Airship", "Hot Air Balloon", "Glider", "Paraglider", "Skydiving", "Rocket", "Spacecraft", "Space Shuttle", "Satellite", "Lunar Rover",
+        "Boat", "Ship", "Cruise Ship", "Ocean Liner", "Cargo Ship", "Container Ship", "Oil Tanker", "Bulk Carrier", "Ferries", "Yacht",
+        "Sailboat", "Catamaran", "Trimaran", "Schooner", "Galley", "Viking Longship", "Submarine", "Aircraft Carrier", "Destroyer", "Frigate",
+        "Battleship", "Tugboat", "Barge", "Hovercraft", "Hydrofoil", "Canoe", "Kayak", "Rowboat", "Dinghy", "Lifeboat",
+        "Tractor", "Bulldozer", "Excavator", "Backhoe", "Crane", "Forklift", "Dump Truck", "Cement Mixer", "Road Roller", "Tow Truck",
+        "Fire Engine", "Ambulance", "Police Car", "SWAT Van", "Mail Truck", "Delivery Van", "Ice Cream Truck", "Food Truck", "Street Sweeper", "Snowplow",
+        "Taxi", "Cab", "Uber", "Lyft", "Rickshaw", "Auto Rickshaw", "Tuk-Tuk", "Dog Sled", "Horse Carriage", "Sleigh",
+        "Chariot", "Gondola", "Punt", "Coracle", "Kayak", "Canoe", "Rafer", "Jet Boat", "Airboat", "Speedboat",
+        "Yacht", "Catamaran", "Trimaran", "Sloop", "Ketch", "Yawl", "Schooner", "Brigantine", "Barque", "Full-Rigged Ship",
+        "Aircraft Carrier", "Amphibious Assault Ship", "Cruiser", "Destroyer", "Frigate", "Corvettes", "Submarine", "Nuclear Submarine", "Ballistic Submarine", "Minehunter",
+        "Space Station", "Mars Rover", "Space Probe", "Interplanetary Spacecraft", "Ion Thruster", "Ramjet", "Scramjet", "Turbofan", "Turbojet", "Propeller",
+        "Cockpit", "Steering Wheel", "Handlebars", "Throttle", "Brakes", "Transmission", "Gearbox", "Clutch", "Accelerator", "Speedometer",
+        "Odometer", "Tire", "Wheel", "Rim", "Axle", "Suspension", "Chassis", "Engine", "Exhaust", "Radiator"
+      ]
+    },
+    {
+      "name": "Art & Literature",
+      "terms": [
+        "Mona Lisa", "The Starry Night", "The Last Supper", "The Scream", "Guernica", "The Kiss", "Girl with a Pearl Earring", "The Thinker", "David", "Venus de Milo",
+        "The Birth of Venus", "Las Meninas", "American Gothic", "Whistler's Mother", "The Persistence of Memory", "The Night Watch", "Liberty Leading the People", "The Creation of Adam", "Water Lilies", "The School of Athens",
+        "Impressionism", "Cubism", "Surrealism", "Renaissance", "Baroque", "Realism", "Romanticism", "Expressionism", "Abstract Art", "Minimalism",
+        "Pop Art", "Neoclassicism", "Dadaism", "Art Nouveau", "Art Deco", "Fauvism", "Pointillism", "Modernism", "Postmodernism", "Classical",
+        "Leonardo da Vinci", "Michelangelo", "Vincent van Gogh", "Pablo Picasso", "Claude Monet", "Salvador Dali", "Rembrandt", "Johannes Vermeer", "Jackson Pollock", "Andy Warhol",
+        "Frida Kahlo", "Georgia O'Keeffe", "Edvard Munch", "Henri Matisse", "Paul Cezanne", "Gustav Klimt", "Auguste Rodin", "Caravaggio", "Raphael", "Hieronymus Bosch",
+        "William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain", "Leo Tolstoy", "Fyodor Dostoevsky", "Ernest Hemingway", "F Scott Fitzgerald", "George Orwell", "JRR Tolkien",
+        "JK Rowling", "Stephen King", "Agatha Christie", "Arthur Conan Doyle", "Edgar Allan Poe", "H_P_Lovecraft", "Ray Bradbury", "Isaac Asimov", "Arthur C Clarke", "Philip K Dick",
+        "Homer", "Virgil", "Dante Alighieri", "Geoffrey Chaucer", "Miguel de Cervantes", "Moliere", "Voltaire", "Johann Wolfgang von Goethe", "Victor Hugo", "Alexandre Dumas",
+        "Jane Eyre", "Pride and Prejudice", "Wuthering Heights", "Great Expectations", "A Tale of Two Cities", "Oliver Twist", "Moby Dick", "War and Peace", "Crime and Punishment", "Anna Karenina",
+        "The Great Gatsby", "To Kill a Mockingbird", "1984", "Animal Farm", "Brave New World", "Lord of the Flies", "The Catcher in the Rye", "Fahrenheit 451", "The Hobbit", "The Lord of the Rings",
+        "Harry Potter", "Percy Jackson", "Twilight", "The Hunger Games", "Game of Thrones", "Chronicles of Narnia", "Alice's Adventures in Wonderland", "Treasure Island", "Robinson Crusoe", "Frankenstein",
+        "Dracula", "Dr Jekyll and Mr Hyde", "The Picture of Dorian Gray", "The Count of Monte Cristo", "Les Miserables", "Don Quixote", "The Odyssey", "The Iliad", "Beowulf", "The Canterbury Tales",
+        "Poetry", "Prose", "Novel", "Novella", "Short Story", "Epic", "Sonnet", "Haiku", "Ballad", "Ode",
+        "Elegy", "Satire", "Tragedy", "Comedy", "Drama", "Monologue", "Dialogue", "Metaphor", "Simile", "Alliteration",
+        "Personification", "Hyperbole", "Irony", "Symbolism", "Theme", "Plot", "Setting", "Protagonist", "Antagonist", "Climax",
+        "Resolution", "Author", "Poet", "Playwright", "Novelist", "Editor", "Publisher", "Library", "Bookstore", "Manuscript",
+        "Paperback", "Hardcover", "E-Book", "Audiobook", "Chapter", "Paragraph", "Sentence", "Word", "Alphabet", "Lexicon",
+        "Canvas", "Easel", "Palette", "Paintbrush", "Oil Paint", "Acrylic Paint", "Watercolor", "Pastel", "Charcoal", "Ink",
+        "Sculpture", "Clay", "Marble", "Bronze", "Chisel", "Kiln", "Gallery", "Museum", "Exhibition", "Curator"
+      ]
+    },
+    {
+      "name": "Brands & Retail",
+      "terms": [
+        "Nike", "Apple", "McDonald's", "Coca-Cola", "Adidas", "Starbucks", "Google", "Amazon", "Samsung", "Disney",
+        "Netflix", "Tesla", "Sony", "Lego", "Pepsi", "Walmart", "Target", "IKEA", "Costco", "Home Depot",
+        "Toyota", "Honda", "Ford", "Chevrolet", "BMW", "Mercedes-Benz", "Audi", "Volkswagen", "Porsche", "Ferrari",
+        "Lamborghini", "Hyundai", "Kia", "Nissan", "Subaru", "Mazda", "Lexus", "Tesla", "Harley-Davidson", "Yamaha",
+        "Gucci", "Louis Vuitton", "Chanel", "Prada", "Hermes", "Burberry", "Versace", "Armani", "Balenciaga", "Dior",
+        "Zara", "H&M", "Uniqlo", "Forever 21", "Levi's", "Calvin Klein", "Tommy Hilfiger", "Ralph Lauren", "Gap", "Old Navy",
+        "Under Armour", "Puma", "Reebok", "New Balance", "Converse", "Vans", "Crocs", "Dr Martens", "Timberland", "North Face",
+        "Patagonia", "Columbia", "Arc'teryx", "Lululemon", "Bath & Body Works", "Sephora", "Ulta Beauty", "Estee Lauder", "L'Oreal", "Maybelline",
+        "Revlon", "MAC Cosmetics", "Clinique", "Nivea", "Dove", "Colgate", "Gillette", "Schick", "Pampers", "Huggies",
+        "Kleenex", "Tide", "Gain", "Clorox", "Lysol", "Dawn", "Fairy", "Duracell", "Energizer", "Panasonic",
+        "Philips", "LG", "Whirlpool", "Bosch", "Dyson", "Bose", "JBL", "Beats", "Sennheiser", "Canon",
+        "Nikon", "Sony", "GoPro", "Fujifilm", "Polaroid", "Nintendo", "PlayStation", "Xbox", "Steam", "Epic Games",
+        "Visa", "Mastercard", "American Express", "PayPal", "Stripe", "JPMorgan Chase", "Bank of America", "Citigroup", "Wells Fargo", "Goldman Sachs",
+        "FedEx", "UPS", "DHL", "USPS", "Airbnb", "Booking.com", "Expedia", "Uber", "Lyft", "DoorDash",
+        "Uber Eats", "Grubhub", "Instacart", "Spotify", "Apple Music", "YouTube", "TikTok", "Instagram", "Facebook", "X",
+        "Snapchat", "Pinterest", "LinkedIn", "Reddit", "Discord", "Twitch", "Zoom", "Microsoft", "Adobe", "Intel",
+        "AMD", "Nvidia", "Qualcomm", "Cisco", "Oracle", "IBM", "HP", "Dell", "Lenovo", "Asus",
+        "Acer", "MSI", "Razer", "Alienware", "KFC", "Burger King", "Subway", "Wendy's", "Taco Bell", "Pizza Hut",
+        "Domino's", "Chipotle", "Dunkin'", "Krispy Kreme", "Tim Hortons", "Wendy's", "Arby's", "Popeyes", "Chick-fil-A", "Jack in the Box"
+      ]
+    },
+    {
+      "name": "Holidays & Celebrations",
+      "terms": [
+        "Christmas", "Halloween", "Thanksgiving", "Easter", "New Year's Eve", "Valentine's Day", "St Patrick's Day", "Independence Day", "Hanukkah", "Diwali",
+        "Eid al-Fitr", "Eid al-Adha", "Ramadan", "Lunar New Year", "Carnival", "Mardi Gras", "Labor Day", "Memorial Day", "Veterans Day", "Presidents' Day",
+        "Mother's Day", "Father's Day", "Children's Day", "Earth Day", "Black Friday", "Cyber Monday", "Boxing Day", "Kwanzaa", "Yom Kippur", "Rosh Hashanah",
+        "Passover", "Holli", "Raksha Bandhan", "Day of the Dead", "Cinco de Mayo", "Oktoberfest", "St Lucia Day", "Burns Night", "Groundhog Day", "Super Bowl",
+        "Birthday", "Wedding", "Anniversary", "Baby Shower", "Bridal Shower", "Graduation", "Retirement", "Housewarming", "Prom", "Homecoming",
+        "Bachelorette Party", "Bachelor Party", "Engagements", "Christening", "Bar Mitzvah", "Bat Mitzvah", "Sweet Sixteen", "Quinceanera", "Funeral", "Wake",
+        "Costume", "Mask", "Pumpkin", "Jack-o'-lantern", "Ghost", "Witch", "Vampire", "Zombie", "Skeleton", "Spiderweb",
+        "Candy", "Trick-or-Treat", "Turkey", "Stuffing", "Cranberry Sauce", "Pumpkin Pie", "Gravy", "Cornucopia", "Tree", "Ornament",
+        "Stocking", "Santa Claus", "Reindeer", "Snowflake", "Mistletoe", "Wreath", "Gift", "Present", "Wrapping Paper", "Ribbon",
+        "Fireworks", "Sparkler", "Confetti", "Streamer", "Balloon", "Party Horn", "Champagne", "Cake", "Cupcake", "Candles",
+        "Party Hat", "Invitation", "Greeting Card", "Flower Bouquet", "Chocolate", "Ring", "Vows", "Reception", "Catering", "DJ",
+        "Dance Floor", "Photobooth", "Guestbook", "Favors", "Centerpiece", "Bunting", "Garland", "Tinsel", "Glitter", "Pinata",
+        "Costume Party", "Masquerade", "Parade", "Float", "Marching Band", "Festival", "Carnival Ride", "Ferris Wheel", "Roller Coaster", "Fireworks Show",
+        "Resolution", "Countdown", "Midnight", "Auld Lang Syne", "Champagne Toast", "Kiss", "Luck", "Fortune", "Tradition", "Culture",
+        "Feast", "Banquet", "Potluck", "Barbecue", "Picnic", "Tailgate", "Brunch", "Cocktail Party", "Gala", "Ball",
+        "Red Carpet", "Ceremony", "Award", "Trophy", "Medal", "Ribbon", "Diploma", "Cap and Gown", "Valedictorian", "Alumni",
+        "Celebration", "Rejoicing", "Merriment", "Joy", "Happiness", "Laughter", "Cheers", "Toast", "Applause", "Cheers",
+        "Holiday", "Vacation", "Break", "Long Weekend", "Trip", "Journey", "Adventure", "Getaway", "Staycation", "Oasis",
+        "Resort", "Hotel", "Beach", "Cabin", "Mountain", "Cruise", "Passport", "Ticket", "Luggage", "Souvenir"
+      ]
+    },
+    {
+      "name": "Human Body & Health",
+      "terms": [
+        "Head", "Brain", "Skull", "Face", "Forehead", "Eye", "Eyebrow", "Eyelash", "Nose", "Ear",
+        "Mouth", "Lip", "Tooth", "Tongue", "Jaw", "Chin", "Neck", "Throat", "Vocal Cords", "Shoulder",
+        "Arm", "Elbow", "Forearm", "Wrist", "Hand", "Palm", "Finger", "Thumb", "Nail", "Chest",
+        "Ribcage", "Lung", "Heart", "Breast", "Abdomen", "Stomach", "Liver", "Kidney", "Intestine", "Pancreas",
+        "Spleen", "Back", "Spine", "Spinal Cord", "Pelvis", "Hip", "Leg", "Thigh", "Knee", "Shin",
+        "Calf", "Ankle", "Foot", "Heel", "Arch", "Toe", "Skin", "Hair", "Sweat Gland", "Muscle",
+        "Bone", "Cartilage", "Joint", "Ligament", "Tendon", "Blood", "Plasma", "Platelet", "White Blood Cell", "Red Blood Cell",
+        "Artery", "Vein", "Capillary", "Pulse", "Blood Pressure", "Heart Rate", "Respiration", "Oxygen", "Carbon Dioxide", "Metabolism",
+        "Digestion", "Immune System", "Antibody", "Pathogen", "Virus", "Bacteria", "Infection", "Fever", "Inflammation", "Pain",
+        "Headache", "Cough", "Cold", "Flu", "Allergy", "Asthma", "Diabetes", "Cancer", "Tumor", "Surgery",
+        "Doctor", "Nurse", "Hospital", "Clinic", "Pharmacy", "Medicine", "Pill", "Syrup", "Injection", "Vaccine",
+        "Bandage", "Stitches", "Cast", "X-Ray", "MRI", "CT Scan", "Ultrasound", "Stethoscope", "Thermometer", "Syringe",
+        "Fitness", "Exercise", "Workout", "Cardio", "Strength Training", "Yoga", "Pilates", "Flexibility", "Stretching", "Endurance",
+        "Nutrition", "Diet", "Protein", "Carbohydrate", "Fat", "Vitamin", "Mineral", "Calorie", "Hydration", "Water",
+        "Sleep", "Rest", "Dream", "REM", "Insomnia", "Fatigue", "Energy", "Wellness", "Mental Health", "Therapy",
+        "Counseling", "Psychology", "Psychiatry", "Stress", "Anxiety", "Depression", "Happiness", "Mindfulness", "Meditation", "Relaxation",
+        "Optometrist", "Dentist", "Orthodontist", "Dermatologist", "Cardiologist", "Neurologist", "Pediatrician", "Geriatrician", "Oncologist", "Radiologist",
+        "Anesthesiologist", "Pathologist", "Epidemiologist", "Immunologist", "Endocrinologist", "Gastroenterologist", "Pulmonologist", "Nephrologist", "Urologist", "Gynecologist",
+        "Obstetrician", "Hematologist", "Rheumatologist", "Otolaryngologist", "Podiatrist", "Chiropractor", "Physiotherapist", "Occupational Therapist", "Speech Therapist", "Phlebotomist",
+        "DNA", "Gene", "Chromosome", "Genome", "Mutation", "Inheritance", "Evolution", "Anatomy", "Physiology", "Biology"
+      ]
+    },
+    {
+      "name": "Nature & Weather",
+      "terms": [
+        "Rain", "Snow", "Sleet", "Hail", "Cloud", "Fog", "Mist", "Haze", "Wind", "Breeze",
+        "Storm", "Thunder", "Lightning", "Hurricane", "Typhoon", "Cyclone", "Tornado", "Blizzard", "Drought", "Flood",
+        "Wildfire", "Avalanche", "Landslide", "Earthquake", "Tsunami", "Volcano", "Eruption", "Magma", "Lava", "Ash",
+        "Sun", "Sunshine", "Sunlight", "Sunrise", "Sunset", "Twilight", "Dawn", "Dusk", "Night", "Day",
+        "Temperature", "Heat", "Cold", "Humidity", "Pressure", "Barometer", "Thermometer", "Meteorology", "Forecast", "Climate",
+        "Season", "Spring", "Summer", "Autumn", "Fall", "Winter", "Equinox", "Solstice", "Monsoon", "El Nino",
+        "La Nina", "Greenhouse Effect", "Global Warming", "Ozone Layer", "Atmosphere", "Troposphere", "Stratosphere", "Biosphere", "Ecosystem", "Biome",
+        "Forest", "Rainforest", "Jungle", "Woodland", "Taiga", "Tundra", "Savanna", "Steppe", "Grassweed", "Desert",
+        "Oasis", "Dune", "Canyon", "Valley", "Mountain", "Hill", "Plateau", "Plain", "Meadow", "Cliff",
+        "Cave", "Cavern", "Glacier", "Iceberg", "Fjord", "Bay", "Gulf", "Sea", "Ocean", "River",
+        "Stream", "Creek", "Waterfall", "Lake", "Pond", "Reservoir", "Wetland", "Marsh", "Swamp", "Bog",
+        "Mangrove", "Delta", "Estuary", "Island", "Peninsula", "Archipelago", "Atoll", "Lagoon", "Coral Reef", "Tide",
+        "Wave", "Current", "Whirlpool", "Geyser", "Hot Spring", "Mineral Spring", "Cataract", "Rapids", "Watershed", "Drainage",
+        "Soil", "Dirt", "Clay", "Sand", "Silt", "Loam", "Humus", "Rock", "Stone", "Boulder",
+        "Pebble", "Mineral", "Crystal", "Gemstone", "Fossil", "Amber", "Petroleum", "Coal", "Natural Gas", "Ore",
+        "Tree", "Shrub", "Bush", "Fern", "Moss", "Lichen", "Grass", "Flower", "Blossom", "Petal",
+        "Stem", "Leaf", "Root", "Seed", "Fruit", "Nut", "Vine", "Cactus", "Succulent", "Palm",
+        "Pine", "Oak", "Maple", "Birch", "Willow", "Cedar", "Redwood", "Sequoia", "Banyan", "Bamboo",
+        "Environment", "Conservation", "Sustainability", "Recycling", "Pollution", "Smog", "Deforestation", "Erosion", "Extinction", "Biodiversity"
+      ]
+    },
+    {
+      "name": "Abstract & Emotions",
+      "terms": [
+        "Love", "Hate", "Joy", "Sadness", "Anger", "Fear", "Surprise", "Disgust", "Trust", "Anticipation",
+        "Happiness", "Excitement", "Enthusiasm", "Passion", "Affection", "Admiration", "Gratitude", "Hope", "Optimism", "Confidence",
+        "Pride", "Relief", "Satisfaction", "Serenity", "Peace", "Empathy", "Compassion", "Kindness", "Generosity", "Sympathy",
+        "Grief", "Sorrow", "Heartbreak", "Regret", "Guilt", "Shame", "Embarrassment", "Loneliness", "Melancholy", "Despair",
+        "Frustration", "Annoyance", "Irritation", "Resentment", "Jealousy", "Envy", "Bitterness", "Hostility", "Rage", "Fury",
+        "Anxiety", "Worry", "Nervousness", "Tension", "Stress", "Panic", "Dread", "Apprehension", "Insecurity", "Vulnerability",
+        "Curiosity", "Wonder", "Awe", "Amazement", "Confusion", "Puzzlement", "Boredom", "Apathy", "Indifference", "Nostalgia",
+        "Time", "Space", "Infinity", "Eternity", "Destiny", "Fate", "Karma", "Chance", "Luck", "Probability",
+        "Truth", "Lie", "Honesty", "Deception", "Justice", "Injustice", "Freedom", "Liberty", "Equality", "Fairness",
+        "Power", "Control", "Authority", "Influence", "Strength", "Weakness", "Courage", "Bravery", "Cowardice", "Heroism",
+        "Wisdom", "Knowledge", "Intelligence", "Ignorance", "Logic", "Reason", "Chaos", "Order", "Balance", "Harmony",
+        "Beauty", "Ugliness", "Grace", "Clumsiness", "Purity", "Innocence", "Evil", "Sin", "Virtue", "Morality",
+        "Ethics", "Honor", "Integrity", "Dignity", "Respect", "Loyalty", "Betrayal", "Trust", "Faith", "Belief",
+        "Doubt", "Skepticism", "Mystery", "Secret", "Enigma", "Paradox", "Concept", "Idea", "Thought", "Mind",
+        "Soul", "Spirit", "Consciousness", "Awareness", "Identity", "Personality", "Character", "Temperament", "Mood", "Vibe",
+        "Success", "Failure", "Achievement", "Ambition", "Goal", "Dream", "Vision", "Purpose", "Meaning", "Significance",
+        "Value", "Worth", "Wealth", "Poverty", "Scarcity", "Abundance", "Plentiful", "Excess", "Luxury", "Simplicity",
+        "Complexity", "Difficulty", "Ease", "Perfection", "Flaw", "Mistake", "Error", "Accident", "Miracle", "Magic",
+        "Reality", "Illusion", "Fantasy", "Imagination", "Creativity", "Inspiration", "Genius", "Talent", "Skill", "Ability",
+        "Change", "Transition", "Progress", "Evolution", "Revolution", "Reform", "Stability", "Stagnation", "Motion", "Stillness"
+      ]
+    },
+    {
+      "name": "Malayalam Movies",
+      "terms": [
+        "Drishyam", "Premam", "Manichitrathazhu", "Spadikam", "Devasuram", "Nadodikkattu", "Kilukkam", "Manivitrathazhu", "Thoovanathumbikal", "Namukku Parkkan Munthirithoppukal",
+        "Chithram", "Vandanam", "Ramji Rao Speaking", "In Harihar Nagar", "Godfather", "Bharatham", "Kizhakkunnakal", "His Highness Abdullah", "Dhwani", "Perumthachan",
+        "Commissioner", "Lelam", "Pathram", "Rajavinte Makan", "New Delhi", "Kuruthipunal", "Thanmathra", "Vaasthavam", "Pranchiyettan and the Saint", "Amen",
+        "Bangalore Days", "Charlie", "Maheshinte Prathikaaram", "Thondimuthalum Driksakshiyum", "Kumbalangi Nights", "Jallikattu", "Minnal Murali", "Bheeshma Parvam", "Lucifer", "Kurup",
+        "Drishyam 2", "Hridayam", "Bhoothakaalam", "Nanpakal Nerathu Mayakkam", "2018", "Romancham", "Kannur Squad", "Manjummel Boys", "Aadujeevitham", "Premalu",
+        "Mohanlal", "Mammootty", "Dulquer Salmaan", "Fahadh Faasil", "Prithviraj Sukumaran", "Nivin Pauly", "Tovino Thomas", "Asif Ali", "Jayasurya", "Kunchacko Boban",
+        "Biju Menon", "Dileep", "Mukesh", "Jagathy Sreekumar", "Innocent", "Sreenivasan", "Nedumudi Venu", "Thilakan", "Kollam Thulasi", "Oduvil Unnikrishnan",
+        "Urvashi", "Shobana", "Revathi", "Parvathy Thiruvothu", "Nazriya Nazim", "Sai Pallavi", "Manju Warrier", "Nayanthara", "Amala Paul", "Aishwarya Lekshmi",
+        "Siddique", "Saikumar", "Murali", "Narendra Prasad", "Janardanan", "Babu Antony", "Captain Raju", "Devan", "Vijayaraghavan", "Sai Kumar",
+        "Sathyan", "Prem Nazir", "Madhu", "Jayan", "Soman", "Sukumaran", "Bharath Gopi", "Nedumudi Venu", "KPAC Lalitha", "Sukumari",
+        "Sreenivasan", "Priyadarshan", "Sibi Malayil", "Lal Jose", "Sathyan Anthikad", "Fazil", "I.V. Sasi", "Padmarajan", "Bharathan", "K.G. George",
+        "Lijo Jose Pellissery", "Dileesh Pothan", "Aashiq Abu", "Anwar Rasheed", "Jeethu Joseph", "Basil Joseph", "Chidambaran", "Ratheesh Balakrishnan Poduval", "Vineeth Sreenivasan", "Alphonse Puthren",
+        "Oru Vadakkan Veeragatha", "Pazhassi Raja", "Njan Steve Lopez", "Ee.Ma.Yau", "Angamaly Diaries", "Thattathin Marayathu", "Jacobinte Swargarajyam", "Ohm Shanthi Oshaana", "Mayanadhi", "Uturn",
+        "C.I.D. Moosa", "Meesha Madhavan", "Kunjiramayanam", "Adi Kapyare Kootamani", "Aadu", "Kattappanayile Ramesh Hridayam", "Paappan", "Bramayugam", "Turbo", "Aavesham",
+        "Malikappuram", "Garudan", "Neru", "Kala", "Nayattu", "C U Soon", "Malik", "Trance", "Varathan", "Joji",
+        "Iyinte Pusthakam", "Kammatipaadam", "Annayum Rasoolum", "North 24 Kaatham", "Mumbai Police", "Memories", "Drishyam", "Grandmaster", "Pranayam", "Beautiful",
+        "Traffic", "Salt N' Pepper", "Chappa Kurish", "Ee Puzhayum Kadannu", "Aaram Thampuran", "Narasimham", "Ravanaprabhu", "Valiyettan", "Natturajavu", "Rajamanikyam"
+      ]
+    },
+    {
+      "name": "Superheroes",
+      "terms": [
+        "Superman", "Batman", "Wonder Woman", "The Flash", "Aquaman", "Green Lantern", "Cyborg", "Martian Manhunter", "Shazam", "Green Arrow",
+        "Spider-Man", "Iron Man", "Captain America", "Thor", "Hulk", "Black Widow", "Hawkeye", "Doctor Strange", "Black Panther", "Ant-Man",
+        "Wasp", "Scarlet Witch", "Vision", "Falcon", "Winter Soldier", "Star-Lord", "Gamora", "Drax", "Rocket Raccoon", "Groot",
+        "Captain Marvel", "Shang-Chi", "Eternals", "Moon Knight", "Ms. Marvel", "She-Hulk", "Blade", "Ghost Rider", "Daredevil", "Jessica Jones",
+        "Luke Cage", "Iron Fist", "Punisher", "Deadpool", "Wolverine", "Professor X", "Magneto", "Storm", "Cyclops", "Jean Grey",
+        "Beast", "Mystique", "Rogue", "Gambit", "Nightcrawler", "Colossus", "Ice-man", "Shadowcat", "Cable", "Domino",
+        "Joker", "Lex Luthor", "Harley Quinn", "Catwoman", "The Riddler", "The Penguin", "Two-Face", "Scarecrow", "Bane", "Ra's al Ghul",
+        "Thanos", "Loki", "Ultron", "Green Goblin", "Doctor Octopus", "Venom", "Carnage", "Magneto", "Darkseid", "General Zod",
+        "Brainiac", "Black Manta", "Ocean Master", "Deathstroke", "Reverse-Flash", "Sinestro", "Black Adam", "Kingpin", "Red Skull", "Baron Zemo",
+        "Mysterio", "Sandman", "Electro", "Vulture", "Kraven the Hunter", "Lizard", "Rhino", "Abomination", "Mandarin", "Hela",
+        "Surtur", "Ronan", "Ego", "High Evolutionary", "Kang the Conqueror", "Gorr the God Butcher", "Namor", "Silver Surfer", "Galactus", "Fantastic Four",
+        "Mr. Fantastic", "Invisible Woman", "Human Torch", "The Thing", "Doctor Doom", "Sub-Mariner", "Ghost-Spider", "Miles Morales", "Spider-Gwen", "Spider-Man 2099",
+        "Batgirl", "Nightwing", "Robin", "Red Hood", "Supergirl", "Superboy", "Static Shock", "Blue Beetle", "Booster Gold", "Plastic Man",
+        "Spawn", "Hellboy", "Spawn", "Invincible", "Omni-Man", "The Boys", "Homelander", "Starlight", "Billy Butcher", "Hughie Campbell",
+        "Peacemaker", "Vigilante", "Harley Quinn", "Rorschach", "Dr. Manhattan", "Nite Owl", "Silk Spectre", "Ozymandias", "The Comedian", "Watchmen",
+        "Teen Titans", "Robin", "Cyborg", "Starfire", "Raven", "Beast Boy", "Justice League", "Avengers", "X-Men", "Suicide Squad",
+        "Sinister Six", "Secret Avengers", "Illuminati", "Defenders", "Midnight Sons", "Champions", "Young Avengers", "Thunderbolts", "Dark Avengers", "Inhumans",
+        "Black Bolt", "Medusa", "Karnak", "Gorgon", "Triton", "Crystal", "Lockjaw", "Maximum Carnage", "Infinity Gauntlet", "Secret Wars",
+        "Civil War", "Crisis on Infinite Earths", "Flashpoint", "Dark Knight Returns", "Killing Joke", "Year One", "Long Halloween", "Death of Superman", "Knightfall", "Old Man Logan",
+        "Marvel", "DC Comics", "Image Comics", "Dark Horse", "Valiant", "Dynamite", "IDW", "Graphic Novel", "Comic Book", "Stan Lee"
+      ]
+    },
+    {
+      "name": "Popular Anime",
+      "terms": [
+        "Naruto", "One Piece", "Dragon Ball Z", "Bleach", "Attack on Titan", "My Hero Academia", "Demon Slayer", "Jujutsu Kaisen", "Fullmetal Alchemist", "Death Note",
+        "Hunter x Hunter", "Tokyo Ghoul", "Sword Art Online", "One Punch Man", "Mob Psycho 100", "Chainsaw Man", "Spy x Family", "Blue Lock", "Haikyuu", "Kuroko's Basketball",
+        "Cowboy Bebop", "Neon Genesis Evangelion", "Sailor Moon", "Pokemon", "Digimon", "Yu-Gi-Oh", "BeyBlade", "Bakugan", "InuYasha", "Yu Yu Hakusho",
+        "Shaman King", "Fruits Basket", "Ouran High School Host Club", "Death Parade", "Steins;Gate", "Code Geass", "Gurren Lagann", "Akame ga Kill", "Parasyte", "Erased",
+        "Dr Stone", "Fire Force", "Soul Eater", "Blue Exorcist", "Black Clover", "Seven Deadly Sins", "Fairy Tail", "Overlord", "Re:Zero", "Konosuba",
+        "Mushoku Tensei", "Shield Hero", "Slime Datta Ken", "No Game No Life", "Log Horizon", "Made in Abyss", "The Promised Neverland", "Vinland Saga", "Berserk", "Vagabond",
+        "Gintama", "Bungou Stray Dogs", "Durarara", "Baccano", "Great Teacher Onizuka", "Nana", "Paradise Kiss", "K-On", "Lucky Star", "Melancholy of Haruhi Suzumiya",
+        "Anohana", "Your Lie in April", "A Silent Voice", "Your Name", "Weathering With You", "Spirited Away", "Princess Mononoke", "My Neighbor Totoro", "Howl's Moving Castle", "Ponyo",
+        "Akira", "Ghost in the Shell", "Paprika", "Perfect Blue", "Tokyo Godfathers", "Vampire Hunter D", "Trigun", "Hellsing", "Black Lagoon", "Jormungand",
+        "Claymore", "Elfen Lied", "Blood+", "Shiki", "Another", "Higurashi", "Mirai Nikki", "Deadman Wonderland", "Akudama Drive", "Cyberpunk Edgerunners",
+        "Arcane", "Solo Leveling", "Tower of God", "God of High School", "Lookism", "BoFuri", "Cautious Hero", "Shadows House", "Summertime Rendering", "Odd Taxi",
+        "Ranking of Kings", "Spy Classroom", "Lycoris Recoil", "Chillin in My 30s", "Mashle", "Hell's Paradise", "Undead Unluck", "Dandadan", "Frieren", "The Apothecary Diaries",
+        "Goku", "Vegeta", "Naruto Uzumaki", "Sasuke Uchiha", "Luffy", "Zoro", "Ichigo Kurosaki", "Eren Yeager", "Mikasa Ackerman", "Levi Ackerman",
+        "Tanjiro Kamado", "Nezuko", "Satoru Gojo", "Yuji Itadori", "Megumi Fushiguro", "Denji", "Makima", "Anya Forger", "Loid Forger", "Yor Forger",
+        "Light Yagami", "L", "Edward Elric", "Alphonse Elric", "Spike Spiegel", "Shinji Ikari", "Asuka Langley", "Sailor Moon", "Ash Ketchum", "Pikachu",
+        "Kaneki Ken", "Kirito", "Asuna", "Saitama", "Genos", "Mob", "Reigen", "Shoyo Hinata", "Tobio Kageyama", "Lelouch vi Britannia",
+        "Studio Ghibli", "Kyoto Animation", "Ufotable", "MAPPA", "Madhouse", "Bones", "Wit Studio", "A-1 Pictures", "Toei Animation", "Pierrot",
+        "CloverWorks", "Trigger", "Gainax", "Production IG", "Sunrise", "Orange", "Shaft", "PA Works", "White Fox", "David Production",
+        "Shonen", "Shojo", "Seinen", "Josei", "Isekai", "Mecha", "Slice of Life", "Cyberpunk", "Magical Girl", "Sports Anime"
+      ]
+    },
+    {
+      "name": "Cartoon Characters",
+      "terms": [
+        "Mickey Mouse", "Minnie Mouse", "Donald Duck", "Goofy", "Pluto", "Bugs Bunny", "Daffy Duck", "Porky Pig", "Tweety", "Sylvester",
+        "Tom", "Jerry", "Scooby-Doo", "Shaggy", "Fred", "Daphne", "Velma", "SpongeBob SquarePants", "Patrick Star", "Squidward Tentacles",
+        "Mr Krabs", "Sandy Cheeks", "Plankton", "Homer Simpson", "Marge Simpson", "Bart Simpson", "Lisa Simpson", "Maggie Simpson", "Peter Griffin", "Lois Griffin",
+        "Stewie Griffin", "Brian Griffin", "Cartman", "Stan Marsh", "Kyle Broflovski", "Kenny McCormick", "Bender", "Fry", "Leela", "Phineas",
+        "Ferb", "Perry the Platypus", "Kim Possible", "Ron Stoppable", "Danny Phantom", "Fairly OddParents", "Timmy Turner", "Cosmo", "Wanda", "Jimmy Neutron",
+        "Avatar Aang", "Katara", "Sokka", "Toph", "Zuko", "Iroh", "Korra", "Ben Tennyson", "Generator Rex", "Powerpuff Girls",
+        "Dexter", "Dee Dee", "Johnny Bravo", "Courage the Cowardly Dog", "Cow and Chicken", "Ed Edd n Eddy", "Foster's Home for Imaginary Friends", "Chder", "Flapjack", "Adventure Time",
+        "Finn the Human", "Jake the Dog", "Ice King", "Princess Bubblegum", "Marcy", "Regular Show", "Mordecai", "Rigby", "Skips", "Muscle Man",
+        "Gravity Falls", "Dipper Pines", "Mabel Pines", "Grunkle Stan", "Bill Cipher", "Steven Universe", "Garnet", "Amethyst", "Pearl", "Peridot",
+        "Star Butterfly", "Marco Diaz", "Ladybug", "Cat Noir", "Miraculous", "Teen Titans", "Robin", "Cyborg", "Starfire", "Raven",
+        "Beast Boy", "Young Justice", "Batman Animated", "Superman Animated", "Justice League Unlimited", "Batman Beyond", "Static Shock", "Green Lantern TAS", "Harmful", "DuckTales",
+        "Scrooge McDuck", "Huey", "Dewey", "Louie", "Darkwing Duck", "TailSpin", "Rescue Rangers", "Chip", "Dale", "Gummibears",
+        "Winnie the Pooh", "Piglet", "Tigger", "Eeyore", "Rabbit", "Owl", "Kanga", "Roo", "Christopher Robin", "Tigger",
+        "Peanuts", "Charlie Brown", "Snoopy", "Woodstock", "Linus", "Lucy", "Garfield", "Odie", "Heathcliff", "Pink Panther",
+        "Road Runner", "Wile E Coyote", "Tasmanian Devil", "Yosemite Sam", "Foghorn Leghorn", "Marvin the Martian", "Speedy Gonzales", "Pepe Le Pew", "Tasmanian Devil", "Elmer Fudd",
+        "Woody Woodpecker", "Felix the Cat", "Betty Boop", "Popeye", "Olive Oyl", "Bluto", "Casper", "Richie Rich", "Archie", "Sabrina",
+        "Peppa Pig", "George Pig", "Bluey", "Bingo", "Paw Patrol", "Chase", "Marshall", "Skye", "Rubble", "Rocky",
+        "Dora the Explorer", "Diego", "Boots", "Mickey Mouse Clubhouse", "Doc McStuffins", "Sofia the First", "Elena of Avalor", "Fancy Nancy", "Vampirina", "Blue's Clues"
+      ]
+    }
+  ]
+};
+
+        const MEDIA = {
+            // ============================================================
+            // USER: Save your uploaded images to the project folder
+            // and update the file paths below
+            // ============================================================
+            
+            // Main backgrounds - used throughout the game
+            backgrounds: [
+                'images/gandhi-banana-trees.png',  // Gandhi with young man, banana trees background
+                'images/banana-superhero-standing.png',  // Banana superhero standing
+                'images/comic-battle-scene.png'  // Comic battle scene with banana superhero
+            ],
+            
+            // Result images - shown when imposter is caught
+            imposterCaught: [
+                'images/banana-superhero-standing.png',  // Banana superhero victory
+                'images/comic-battle-scene.png'  // Heroic battle scene
+            ],
+            
+            // Result images - shown when imposter escapes
+            imposterEscaped: [
+                'images/expressions-triptych.png',  // Dramatic expressions
+                'images/comic-battle-scene.png'  // Chaos scene
+            ],
+            
+            // Blind imposter caught
+            blindImposterCaught: [
+                'images/banana-superhero-standing.png'
+            ],
+            
+            // Blind imposter escaped
+            blindImposterEscaped: [
+                'images/expressions-triptych.png'
+            ],
+            
+            // Game mode artwork
+            classicMode: [
+                'images/gandhi-banana-trees.png'
+            ],
+            
+            blindMode: [
+                'images/banana-superhero-standing.png'
+            ],
+            
+            // Reveal screen artwork
+            revealNormal: [
+                'images/gandhi-banana-trees.png'
+            ],
+            
+            revealClassic: [
+                'images/expressions-triptych.png'  // Suspenseful expressions
+            ],
+            
+            revealBlind: [
+                'images/banana-superhero-standing.png'  // Banana theme for blind mode
+            ]
+        };
+
+        const AUDIO = {
+            imposterCaught: 'images/c.mp3',
+            imposterEscaped: 'images/a.mp3',
+            blindImposterCaught: 'images/c.mp3',
+            blindImposterEscaped:'images/a.mp3',
+            reveal: null,
+            voting: 'images/b.mp3',
+            transition: null
+        };
+
+        // ============================================================
+        // GAME STATE
+        // ============================================================
+
+        const GameState = {
+            HOME: 'HOME',
+            SETUP: 'SETUP',
+            ROUND_INTRO: 'ROUND_INTRO',
+            PLAYER_REVEAL: 'PLAYER_REVEAL',
+            PASS_SCREEN: 'PASS_SCREEN',
+            DISCUSSION: 'DISCUSSION',
+            VOTING: 'VOTING',
+            VOTE_PASS: 'VOTE_PASS',
+            CINEMATIC_RESULT: 'CINEMATIC_RESULT',
+            ROUND_RESULT: 'ROUND_RESULT'
+        };
+
+        let currentState = GameState.HOME;
+        let audioEnabled = true;
+        let audioInitialized = false;
+
+        let gameData = {
+            players: [],
+            scores: {},
+            round: 1,
+            mode: null, // 'classic' or 'blind'
+            imposterCount: 1,
+            category: null,
+            secretWord: null,
+            blindWord: null,
+            imposters: [],
+            currentPlayerIndex: 0,
+            currentVoterIndex: 0,
+            votes: {},
+            selectedVote: null
+        };
+
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function getRandomElement(array) {
+            if (!array || array.length === 0) return null;
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            currentState = screenId.replace('Screen', '').toUpperCase();
+        }
+
+        function showError(message) {
+            const errorEl = document.getElementById('setupError');
+            errorEl.textContent = message;
+            errorEl.classList.remove('hidden');
+            setTimeout(() => {
+                errorEl.classList.add('hidden');
+            }, 3000);
+        }
+
+        // ============================================================
+        // PLAYER MANAGEMENT
+        // ============================================================
+
+        const PlayerManager = {
+            addPlayer() {
+                const input = document.getElementById('playerNameInput');
+                const name = input.value.trim();
+                
+                if (!name) {
+                    showError('Operative name cannot be empty');
+                    return;
+                }
+                
+                if (gameData.players.includes(name)) {
+                    showError('Operative already assigned');
+                    return;
+                }
+                
+                gameData.players.push(name);
+                gameData.scores[name] = 0;
+                input.value = '';
+                this.renderPlayerList();
+            },
+
+            removePlayer(index) {
+                const name = gameData.players[index];
+                delete gameData.scores[name];
+                gameData.players.splice(index, 1);
+                this.renderPlayerList();
+            },
+
+            renderPlayerList() {
+                const listEl = document.getElementById('playerList');
+                const countEl = document.getElementById('playerCount');
+                
+                listEl.innerHTML = '';
+                gameData.players.forEach((name, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'player-item';
+                    item.innerHTML = `
+                        <span class="player-name">${name}</span>
+                        <button class="btn-remove" onclick="PlayerManager.removePlayer(${index})">REMOVE</button>
+                    `;
+                    listEl.appendChild(item);
+                });
+                
+                countEl.textContent = `${gameData.players.length} OPERATIVE${gameData.players.length !== 1 ? 'S' : ''}`;
+            },
+
+            validatePlayerCount() {
+                if (gameData.players.length < 3) {
+                    showError('Minimum 3 operatives required');
+                    return false;
+                }
+                
+                if (gameData.imposterCount === 2 && gameData.players.length < 4) {
+                    showError('Need at least 4 operatives for 2 imposters');
+                    return false;
+                }
+                
+                return true;
+            }
+        };
+
+        // ============================================================
+        // GAME MODE SELECTION
+        // ============================================================
+
+        const GameMode = {
+            selectClassic() {
+                gameData.mode = 'classic';
+                document.getElementById('classicMode').classList.add('selected');
+                document.getElementById('blindMode').classList.remove('selected');
+            },
+
+            selectBlind() {
+                gameData.mode = 'blind';
+                document.getElementById('blindMode').classList.add('selected');
+                document.getElementById('classicMode').classList.remove('selected');
+            },
+
+            selectOneImposter() {
+                gameData.imposterCount = 1;
+                document.getElementById('oneImposter').classList.add('selected');
+                document.getElementById('twoImposters').classList.remove('selected');
+            },
+
+            selectTwoImposters() {
+                gameData.imposterCount = 2;
+                document.getElementById('twoImposters').classList.add('selected');
+                document.getElementById('oneImposter').classList.remove('selected');
+            }
+        };
+
+        // ============================================================
+        // CATEGORY MANAGEMENT
+        // ============================================================
+
+        const CategoryManager = {
+            init() {
+                const select = document.getElementById('categorySelect');
+                select.innerHTML = '<option value="RANDOM">RANDOM CATEGORY</option>';
+                
+                GAME_DATA.categories.forEach(category => {
+                    if (category.terms && category.terms.length >= 2) {
+                        const option = document.createElement('option');
+                        option.value = category.name;
+                        option.textContent = category.name;
+                        select.appendChild(option);
+                    }
+                });
+            },
+
+            getCategory(name) {
+                if (name === 'RANDOM') {
+                    const validCategories = GAME_DATA.categories.filter(
+                        cat => cat.terms && cat.terms.length >= 2
+                    );
+                    return getRandomElement(validCategories);
+                }
+                return GAME_DATA.categories.find(cat => cat.name === name);
+            },
+
+            getRandomWord(category) {
+                if (!category || !category.terms || category.terms.length === 0) {
+                    return null;
+                }
+                return getRandomElement(category.terms);
+            },
+
+            getTwoDifferentWords(category) {
+                if (!category || !category.terms || category.terms.length < 2) {
+                    return { primary: null, secondary: null };
+                }
+                
+                const shuffled = shuffleArray(category.terms);
+                return {
+                    primary: shuffled[0],
+                    secondary: shuffled[1]
+                };
+            }
+        };
+
+        // ============================================================
+        // MEDIA MANAGER
+        // ============================================================
+
+        const MediaManager = {
+            getRandomImage(imageArray) {
+                if (!imageArray || imageArray.length === 0) {
+                    return null;
+                }
+                return getRandomElement(imageArray);
+            },
+
+            setBackgroundImage(imageArray) {
+                const bgLayer = document.getElementById('backgroundLayer');
+                const imageUrl = this.getRandomImage(imageArray);
+                
+                if (imageUrl) {
+                    bgLayer.innerHTML = `
+                        <img src="${imageUrl}" class="bg-image" alt="Background" onerror="this.style.display='none'; MediaManager.onImageError()">
+                        <div class="bg-overlay"></div>
+                        <div class="bg-vignette"></div>
+                    `;
+                } else {
+                    bgLayer.innerHTML = `
+                        <div class="css-background">
+                            <div class="bg-overlay"></div>
+                            <div class="bg-vignette"></div>
+                        </div>
+                    `;
+                }
+            },
+
+            onImageError() {
+                // Fallback to CSS background if image fails
+                const bgLayer = document.getElementById('backgroundLayer');
+                bgLayer.innerHTML = `
+                    <div class="css-background">
+                        <div class="bg-overlay"></div>
+                        <div class="bg-vignette"></div>
+                    </div>
+                `;
+            },
+
+            displayResultImage(containerId, imageArray) {
+                const container = document.getElementById(containerId);
+                const imageUrl = this.getRandomImage(imageArray);
+                
+                if (imageUrl) {
+                    container.innerHTML = `<img src="${imageUrl}" class="result-image" alt="Result" onerror="this.style.display='none'">`;
+                } else {
+                    container.innerHTML = '';
+                }
+            }
+        };
+
+        // ============================================================
+        // AUDIO MANAGER
+        // ============================================================
+
+        const AudioManager = {
+            init() {
+                if (audioInitialized) return;
+                
+                const audioControl = document.getElementById('audioControl');
+                audioControl.addEventListener('click', () => {
+                    audioEnabled = !audioEnabled;
+                    audioControl.textContent = audioEnabled ? '🔊' : '🔇';
+                });
+                
+                audioInitialized = true;
+            },
+
+            play(audioKey) {
+                if (!audioEnabled) return;
+                
+                const audioPath = AUDIO[audioKey];
+                if (!audioPath) return;
+                
+                try {
+                    const audio = new Audio(audioPath);
+                    audio.volume = 0.5;
+                    audio.play().catch(() => {
+                        // Silently fail if audio doesn't play
+                    });
+                } catch (error) {
+                    // Continue silently if audio fails
+                }
+            },
+
+            playSuccess() {
+                this.play('imposterCaught');
+            },
+
+            playFailure() {
+                this.play('imposterEscaped');
+            },
+
+            playReveal() {
+                this.play('reveal');
+            },
+
+            playTransition() {
+                this.play('transition');
+            }
+        };
+
+        // ============================================================
+        // GAME LOGIC
+        // ============================================================
+
+        const Game = {
+            goToHome() {
+                showScreen('homeScreen');
+                MediaManager.setBackgroundImage(MEDIA.backgrounds);
+            },
+
+            showHowToPlay() {
+                showScreen('howToPlayScreen');
+            },
+
+            goToSetup() {
+                showScreen('setupScreen');
+                CategoryManager.init();
+                AudioManager.init();
+            },
+
+            startGame() {
+                if (!PlayerManager.validatePlayerCount()) return;
+                if (!gameData.mode) {
+                    showError('Select mission type');
+                    return;
+                }
+                
+                const categorySelect = document.getElementById('categorySelect');
+                gameData.category = CategoryManager.getCategory(categorySelect.value);
+                
+                if (!gameData.category) {
+                    showError('Invalid category');
+                    return;
+                }
+                
+                this.initializeRound();
+            },
+
+            initializeRound() {
+                // Select words
+                if (gameData.mode === 'classic') {
+                    gameData.secretWord = CategoryManager.getRandomWord(gameData.category);
+                    gameData.blindWord = null;
+                } else {
+                    const words = CategoryManager.getTwoDifferentWords(gameData.category);
+                    gameData.secretWord = words.primary;
+                    gameData.blindWord = words.secondary;
+                }
+                
+                if (!gameData.secretWord) {
+                    showError('Category has insufficient words');
+                    return;
+                }
+                
+                // Randomly select imposters
+                const shuffledPlayers = shuffleArray(gameData.players);
+                gameData.imposters = shuffledPlayers.slice(0, gameData.imposterCount);
+                
+                // Reset round state
+                gameData.currentPlayerIndex = 0;
+                gameData.currentVoterIndex = 0;
+                gameData.votes = {};
+                gameData.selectedVote = null;
+                
+                // Show round intro
+                document.getElementById('roundNumber').textContent = String(gameData.round).padStart(2, '0');
+                showScreen('roundIntroScreen');
+                AudioManager.playTransition();
+            },
+
+            startPlayerReveal() {
+                gameData.currentPlayerIndex = 0;
+                this.showPlayerReveal();
+            },
+
+            showPlayerReveal() {
+                const playerName = gameData.players[gameData.currentPlayerIndex];
+                document.getElementById('revealPlayerName').textContent = playerName;
+                document.getElementById('cardContent').classList.add('hidden');
+                document.getElementById('revealCardBtn').classList.remove('hidden');
+                showScreen('playerRevealScreen');
+            },
+
+            revealCard() {
+                const playerName = gameData.players[gameData.currentPlayerIndex];
+                const isImposter = gameData.imposters.includes(playerName);
+                
+                document.getElementById('revealCardBtn').classList.add('hidden');
+                document.getElementById('cardContent').classList.remove('hidden');
+                
+                // Hide all displays
+                document.getElementById('normalWordDisplay').classList.add('hidden');
+                document.getElementById('classicImposterDisplay').classList.add('hidden');
+                document.getElementById('blindImposterDisplay').classList.add('hidden');
+                
+                if (gameData.mode === 'classic') {
+                    if (isImposter) {
+                        document.getElementById('classicImposterDisplay').classList.remove('hidden');
+                    } else {
+                        document.getElementById('secretWordDisplay').textContent = gameData.secretWord;
+                        document.getElementById('normalWordDisplay').classList.remove('hidden');
+                    }
+                } else {
+                    // Blind mode
+                    if (isImposter) {
+                        document.getElementById('blindWordDisplay').textContent = gameData.blindWord;
+                        document.getElementById('blindImposterDisplay').classList.remove('hidden');
+                    } else {
+                        document.getElementById('secretWordDisplay').textContent = gameData.secretWord;
+                        document.getElementById('normalWordDisplay').classList.remove('hidden');
+                    }
+                }
+                
+                AudioManager.playReveal();
+            },
+
+            hideAndPass() {
+                document.getElementById('cardContent').classList.add('hidden');
+                
+                gameData.currentPlayerIndex++;
+                
+                if (gameData.currentPlayerIndex >= gameData.players.length) {
+                    // All players have seen their cards
+                    showScreen('discussionScreen');
+                } else {
+                    // Show pass screen for next player
+                    const nextPlayer = gameData.players[gameData.currentPlayerIndex];
+                    document.getElementById('nextPlayerName').textContent = nextPlayer;
+                    showScreen('passScreen');
+                }
+            },
+
+            readyForNextPlayer() {
+                this.showPlayerReveal();
+            },
+
+            startVoting() {
+                gameData.currentVoterIndex = 0;
+                gameData.votes = {};
+                this.showVotingScreen();
+            },
+
+            showVotingScreen() {
+                const voterName = gameData.players[gameData.currentVoterIndex];
+                document.getElementById('votingPlayerName').textContent = voterName;
+                gameData.selectedVote = null;
+                
+                // Create voting options (all players except the voter)
+                const optionsContainer = document.getElementById('votingOptions');
+                optionsContainer.innerHTML = '';
+                
+                gameData.players.forEach(player => {
+                    if (player !== voterName) {
+                        const option = document.createElement('div');
+                        option.className = 'vote-option';
+                        option.textContent = player;
+                        option.onclick = () => this.selectVote(player, option);
+                        optionsContainer.appendChild(option);
+                    }
+                });
+                
+                document.getElementById('confirmVoteBtn').disabled = true;
+                showScreen('votingScreen');
+            },
+
+            selectVote(player, element) {
+                gameData.selectedVote = player;
+                document.querySelectorAll('.vote-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                element.classList.add('selected');
+                document.getElementById('confirmVoteBtn').disabled = false;
+            },
+
+            confirmVote() {
+                if (!gameData.selectedVote) return;
+                
+                const voterName = gameData.players[gameData.currentVoterIndex];
+                gameData.votes[voterName] = gameData.selectedVote;
+                
+                gameData.currentVoterIndex++;
+                
+                if (gameData.currentVoterIndex >= gameData.players.length) {
+                    // All votes cast
+                    this.calculateResults();
+                } else {
+                    // Show pass screen for next voter
+                    const nextVoter = gameData.players[gameData.currentVoterIndex];
+                    document.getElementById('nextVoterName').textContent = nextVoter;
+                    showScreen('votePassScreen');
+                }
+            },
+
+            readyForNextVoter() {
+                this.showVotingScreen();
+            },
+
+            calculateResults() {
+                // Count votes
+                const voteCounts = {};
+                gameData.players.forEach(player => {
+                    voteCounts[player] = 0;
+                });
+                
+                Object.values(gameData.votes).forEach(votedFor => {
+                    if (voteCounts[votedFor] !== undefined) {
+                        voteCounts[votedFor]++;
+                    }
+                });
+                
+                // Find highest vote count
+                let maxVotes = 0;
+                Object.values(voteCounts).forEach(count => {
+                    if (count > maxVotes) maxVotes = count;
+                });
+                
+                // Find players with max votes
+                const accusedPlayers = gameData.players.filter(
+                    player => voteCounts[player] === maxVotes
+                );
+                
+                // Determine if imposters were caught
+                let imposterCaught = false;
+                
+                if (gameData.imposterCount === 1) {
+                    // Single imposter
+                    if (accusedPlayers.length === 1 && gameData.imposters.includes(accusedPlayers[0])) {
+                        imposterCaught = true;
+                    }
+                } else {
+                    // Two imposters - both must be identified
+                    if (accusedPlayers.length === 2) {
+                        const bothCaught = gameData.imposters.every(imp => accusedPlayers.includes(imp));
+                        imposterCaught = bothCaught;
+                    }
+                }
+                
+                // Update scores
+                if (imposterCaught) {
+                    gameData.imposters.forEach(imp => {
+                        gameData.scores[imp] = (gameData.scores[imp] || 0) + 0;
+                    });
+                    gameData.players.forEach(player => {
+                        if (!gameData.imposters.includes(player)) {
+                            gameData.scores[player] = (gameData.scores[player] || 0) + 1;
+                        }
+                    });
+                } else {
+                    gameData.imposters.forEach(imp => {
+                        gameData.scores[imp] = (gameData.scores[imp] || 0) + 2;
+                    });
+                }
+                
+                // Show cinematic result
+                this.showCinematicResult(imposterCaught, accusedPlayers, voteCounts);
+            },
+
+            showCinematicResult(imposterCaught, accusedPlayers, voteCounts) {
+                const title = document.getElementById('cinematicResultTitle');
+                const impName = document.getElementById('cinematicImposterName');
+                const word = document.getElementById('cinematicResultWord');
+                const points = document.getElementById('cinematicResultPoints');
+                const imageContainer = document.getElementById('cinematicResultImage');
+                
+                title.textContent = imposterCaught ? 'THREAT NEUTRALIZED' : 'MISSION FAILED';
+                title.className = 'result-title ' + (imposterCaught ? 'caught' : 'escaped');
+                
+                impName.textContent = gameData.imposters.join(' & ');
+                
+                word.textContent = `SECRET WORD: ${gameData.secretWord}`;
+                if (gameData.mode === 'blind' && gameData.blindWord) {
+                    word.textContent += ` | IMPOSTER WORD: ${gameData.blindWord}`;
+                }
+                
+                if (imposterCaught) {
+                    points.textContent = '+1 TO ALL OPERATIVES';
+                    points.className = 'result-points positive';
+                    MediaManager.displayResultImage('cinematicResultImage', MEDIA.imposterCaught);
+                    AudioManager.playSuccess();
+                } else {
+                    points.textContent = '+2 TO IMPOSTER(S)';
+                    points.className = 'result-points negative';
+                    MediaManager.displayResultImage('cinematicResultImage', MEDIA.imposterEscaped);
+                    AudioManager.playFailure();
+                }
+                
+                showScreen('cinematicResultScreen');
+                
+                // Auto-transition after 4 seconds
+                setTimeout(() => {
+                    this.showRoundResult(imposterCaught, voteCounts);
+                }, 4000);
+            },
+
+            showRoundResult(imposterCaught, voteCounts) {
+                const title = document.getElementById('roundResultTitle');
+                const impName = document.getElementById('roundImposterName');
+                const secretWord = document.getElementById('roundSecretWord');
+                const blindWord = document.getElementById('roundBlindWord');
+                const scoreboard = document.getElementById('roundScoreboard');
+                
+                title.textContent = imposterCaught ? 'THREAT NEUTRALIZED' : 'MISSION FAILED';
+                title.className = 'result-title ' + (imposterCaught ? 'caught' : 'escaped');
+                
+                impName.textContent = gameData.imposters.join(' & ');
+                secretWord.textContent = `SECRET WORD: ${gameData.secretWord}`;
+                
+                if (gameData.mode === 'blind' && gameData.blindWord) {
+                    blindWord.textContent = `IMPOSTER WORD: ${gameData.blindWord}`;
+                    blindWord.classList.remove('hidden');
+                } else {
+                    blindWord.classList.add('hidden');
+                }
+                
+                // Display result image
+                if (imposterCaught) {
+                    MediaManager.displayResultImage('roundResultImage', MEDIA.imposterCaught);
+                } else {
+                    MediaManager.displayResultImage('roundResultImage', MEDIA.imposterEscaped);
+                }
+                
+                // Render scoreboard
+                this.renderScoreboard(scoreboard);
+                
+                showScreen('roundResultScreen');
+            },
+
+            renderScoreboard(container) {
+                container.innerHTML = '';
+                
+                // Sort players by score
+                const sortedPlayers = [...gameData.players].sort((a, b) => {
+                    return (gameData.scores[b] || 0) - (gameData.scores[a] || 0);
+                });
+                
+                const maxScore = gameData.scores[sortedPlayers[0]] || 0;
+                
+                sortedPlayers.forEach((player, index) => {
+                    const score = gameData.scores[player] || 0;
+                    const isLeader = score === maxScore && score > 0;
+                    
+                    const item = document.createElement('div');
+                    item.className = 'score-item' + (isLeader ? ' leader' : '');
+                    item.innerHTML = `
+                        <span class="score-name">${player}</span>
+                        <span class="score-value">${score}</span>
+                    `;
+                    container.appendChild(item);
+                });
+            },
+
+            playAnotherRound() {
+                gameData.round++;
+                this.initializeRound();
+            },
+
+            newGame() {
+                gameData.players = [];
+                gameData.scores = {};
+                gameData.round = 1;
+                gameData.mode = null;
+                gameData.imposterCount = 1;
+                gameData.category = null;
+                gameData.secretWord = null;
+                gameData.blindWord = null;
+                gameData.imposters = [];
+                
+                // Reset UI
+                document.getElementById('classicMode').classList.remove('selected');
+                document.getElementById('blindMode').classList.remove('selected');
+                document.getElementById('oneImposter').classList.add('selected');
+                document.getElementById('twoImposters').classList.remove('selected');
+                PlayerManager.renderPlayerList();
+                
+                this.goToSetup();
+            }
+        };
+
+        // ============================================================
+        // INITIALIZATION
+        // ============================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize with default selection
+            GameMode.selectOneImposter();
+            
+            // Set initial background
+            MediaManager.setBackgroundImage(MEDIA.backgrounds);
+            
+            // Handle Enter key for player input
+            document.getElementById('playerNameInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    PlayerManager.addPlayer();
+                }
+            });
+        });
+
+        // ============================================================
+        // PRIVACY NOTICE
+        // ============================================================
+        // 
+        // This is a client-side JavaScript application. Secrets are 
+        // stored in memory and displayed in the DOM. A determined user 
+        // could inspect DevTools or source code to view other players' 
+        // information. This game relies on physical privacy (passing 
+        // the device) rather than cryptographic security.
+        //
+        // For true secret protection, a server-side implementation 
+        // with individual devices would be required.
+        //
+        // ============================================================
+
+    </script>
+</body>
+</html>
